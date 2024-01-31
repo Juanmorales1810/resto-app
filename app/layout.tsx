@@ -32,7 +32,7 @@ export default function RootLayout({
             <head />
             <body
                 className={clsx(
-                    "min-h-screen bg-gradient-to-r from-rose-400 to-red-500 font-sans antialiased",
+                    "min-h-screen bg-gradient-to-r from-rose-400 to-red-500 font-sans antialiased dark:bg-gradient-to-r dark:from-rose-800 dark:to-red-950",
                     fontSans.variable
                 )}
             >
