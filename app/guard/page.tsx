@@ -6,6 +6,7 @@ import { Input } from "@nextui-org/input";
 import { useForm } from "react-hook-form";
 import { Link } from "@nextui-org/link";
 import React from "react";
+import axios from "axios";
 
 export default function Sesion() {
     const [isVisible, setIsVisible] = React.useState(false);
@@ -14,11 +15,22 @@ export default function Sesion() {
     const {
         register,
         handleSubmit,
-        watch,
         formState: { errors },
+        reset,
     } = useForm();
-    const onSubmit = handleSubmit(() => {
-        console.log(watch());
+    const onSubmit = handleSubmit(async (data) => {
+        console.log(data.Email);
+        try {
+            const response = await axios.post(
+                "https://tu-api.com/endpoint",
+                data
+            );
+            console.log(response.data);
+            reset();
+        } catch (error) {
+            console.error(error);
+        }
+        reset();
     });
     return (
         <div className="relative flex justify-center items-center h-full w-full bg-slate-800">
