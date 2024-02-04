@@ -1,12 +1,13 @@
 "use client";
 
 import { EyeFilledIcon, EyeSlashFilledIcon } from "@/components/icons";
+import { useAuthFetch } from "@/hooks/useAuthFetch";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { useForm } from "react-hook-form";
 import { Link } from "@nextui-org/link";
 import React from "react";
-import axios from "axios";
+
 
 export default function Sesion() {
     const [isVisible, setIsVisible] = React.useState(false);
@@ -16,21 +17,15 @@ export default function Sesion() {
         register,
         handleSubmit,
         formState: { errors },
-        reset,
     } = useForm();
-    const onSubmit = handleSubmit(async (data) => {
-        console.log(data.Email);
-        try {
-            const response = await axios.post(
-                "https://tu-api.com/endpoint",
-                data
-            );
-            console.log(response.data);
-            reset();
-        } catch (error) {
-            console.error(error);
-        }
-        reset();
+    const authFetch = useAuthFetch()
+    const onSubmit = handleSubmit(async ({ Email: email, Contraseña: password }) => {
+        await authFetch({
+            endpoint: 'login',
+            redirectRoute: '/admin',
+            formData: { email, password }
+        })
+
     });
     return (
         <div className="relative flex justify-center items-center h-full w-full bg-slate-800">

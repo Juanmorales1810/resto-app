@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
         const body: IUser = await request.json();
         const { email, password } = body;
 
-        // Validamos que se envien todos los campos
+        // Validamos que se envíen todos los campos
         if (!email || !password) {
             return NextResponse.json(
                 { message: messages.error.needProps },
