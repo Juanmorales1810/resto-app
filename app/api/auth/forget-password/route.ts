@@ -6,7 +6,7 @@ import User from "@/models/user";
 import { Resend } from "resend";
 import jwt from "jsonwebtoken";
 
-const resend = new Resend("re_qViRvexR_RoQeoPiwgwZf8L99CZroL1eq");
+const resend = new Resend("re_Rx3xw6Wb_3NPtFYfWVbHwSvhTLuSBY918");
 
 export async function POST(request: NextRequest) {
     try {
@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
             expiresIn: 86400,
         });
 
-        const forgetUrl = `http://localhost:3000/change-password?token=${token}`;
+        const forgetUrl = `http://localhost:3000/guard/changepassword?token=${token}`;
 
         // @ts-ignore
         await resend.emails.send({
