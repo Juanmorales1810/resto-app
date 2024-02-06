@@ -4,7 +4,7 @@ import { ThemeSwitch } from "@/components/theme-switch";
 import { siteConfig } from "@/config/site";
 import { Link } from "@nextui-org/link";
 import { useState } from "react";
-import { AcmeLogo } from "@/components/icons";
+import Image from "next/image";
 import {
     Navbar,
     NavbarContent,
@@ -26,8 +26,7 @@ export const Nav = () => {
                     className="sm:hidden"
                 />
                 <NavbarBrand>
-                    <AcmeLogo />
-                    <p className="font-bold text-inherit">ACME</p>
+                    <Image src="/logoresto2.webp" alt="Logo" width="150" height="300" priority />
                 </NavbarBrand>
             </NavbarContent>
 
