@@ -29,14 +29,14 @@ export default function RootLayout({
             <head />
             <body
                 className={clsx(
-                    "min-h-screen bg-gradient-to-r from-rose-400 to-red-500 font-sans antialiased dark:bg-gradient-to-r dark:from-rose-800 dark:to-red-950",
+                    "bg-gradient-to-r from-slate-300 to-slate-500 font-sans antialiased dark:bg-gradient-to-r dark:from-slate-900 dark:to-slate-700",
                     fontSans.variable
                 )}
             >
                 <Providers
                     themeProps={{ attribute: "class", defaultTheme: "dark" }}
                 >
-                    <div className="relative flex flex-col w-full h-screen">
+                    <div className="relative flex flex-col w-full h-full">
                         <main className="mx-auto w-full flex-grow">
                             {children}
                         </main>

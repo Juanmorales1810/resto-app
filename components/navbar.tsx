@@ -26,7 +26,9 @@ export const Nav = () => {
                     className="sm:hidden"
                 />
                 <NavbarBrand>
-                    <Image src="/logoresto2.webp" alt="Logo" width="150" height="300" priority />
+                    <Link href="/" color="foreground" size="lg">
+                        <Image className="dark:invert" src="/logoresto2.webp" alt="Logo" width="150" height="300" priority />
+                    </Link>
                 </NavbarBrand>
             </NavbarContent>
 
@@ -40,7 +42,7 @@ export const Nav = () => {
                 ))}
             </NavbarContent>
             <NavbarContent justify="end">
-                <NavbarItem className="hidden lg:flex">
+                <NavbarItem className="flex">
                     <ThemeSwitch />
                 </NavbarItem>
             </NavbarContent>
