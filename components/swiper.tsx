@@ -1,7 +1,7 @@
 "use client";
 
 import { Swiper, SwiperSlide } from 'swiper/react';
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 import Image from 'next/image';
 import 'swiper/css/pagination';
@@ -24,9 +24,9 @@ export default function Swipe() {
                 navigation={true}
                 modules={[Autoplay, Pagination, Navigation]}
                 className="mySwiper">
-                <SwiperSlide><Image src="/9916733.jpg" alt='img' width={1856} height={1080} /></SwiperSlide>
-                <SwiperSlide><Image src="/99167333.jpg" alt='img' width={1856} height={1080} /></SwiperSlide>
-                <SwiperSlide><Image src="/99167332.jpg" alt='img' width={1856} height={1080} /></SwiperSlide>
+                <SwiperSlide><Image src="/9916733.jpg" alt='img' width={1920} height={1080} priority /></SwiperSlide>
+                <SwiperSlide><Image src="/99167333.jpg" alt='img' width={1920} height={1080} priority /></SwiperSlide>
+                <SwiperSlide><Image src="/99167332.jpg" alt='img' width={1920} height={1080} priority /></SwiperSlide>
             </Swiper>
         </>
     );

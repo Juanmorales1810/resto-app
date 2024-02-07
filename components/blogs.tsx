@@ -1,14 +1,13 @@
 "use client";
 
-import { Card, CardHeader, CardFooter } from "@nextui-org/card";
-import { Button } from "@nextui-org/button";
+import { Card } from "@nextui-org/card";
 import { Image } from "@nextui-org/image";
 import React from "react";
 
 
 export default function Blogs() {
     return (
-        <div className="w-auto max-w-[1200px] gap-2 grid grid-cols-12 grid-rows-2 p-12">
+        <div className="w-auto max-w-7xl gap-4 grid grid-cols-12 grid-rows-2 pt-16">
             <Card className="col-span-12 sm:col-span-4 h-[400px]">
                 <Image
                     removeWrapper

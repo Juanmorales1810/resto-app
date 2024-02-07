@@ -2,6 +2,9 @@
 import { Nav } from "@/components/navbar";
 import Swipe from "@/components/swiper";
 import Blogs from "@/components/blogs";
+import CardSpotlight from "@/components/card";
+import Footer from "@/components/footer";
+
 
 export default function Home() {
     return (
@@ -13,9 +16,10 @@ export default function Home() {
             <section>
                 <Blogs />
             </section>
-            <section>
-
+            <section className="pb-8">
+                <CardSpotlight />
             </section>
+            <Footer />
         </section>
     );
 }

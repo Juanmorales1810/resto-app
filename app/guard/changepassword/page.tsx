@@ -3,6 +3,7 @@
 import { EyeFilledIcon, EyeSlashFilledIcon } from "@/components/icons";
 import { useAuthFetch } from "@/hooks/useAuthFetch";
 import { useSearchParams } from 'next/navigation'
+import { useLoading } from "@/hooks/useLoading";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { useForm } from "react-hook-form";
@@ -13,6 +14,7 @@ import { AxiosRequestConfig } from "axios";
 
 export default function forgetPassword() {
     const [isVisible, setIsVisible] = React.useState(false);
+    const { finishLoading, isLoading, startLoading } = useLoading()
 
     const toggleVisibility = () => setIsVisible(!isVisible);
 
@@ -33,13 +35,14 @@ export default function forgetPassword() {
                 token
             }
         }
+        startLoading()
         await authFetch({
             endpoint: 'change-password',
             redirectRoute: '/guard',
             formData,
             options
         })
-
+        finishLoading()
     });
     return (
         <div className="h-96 max-w-md gap-4 w-full justify-center items-center p-4 bg-slate-200 rounded-xl z-50">
@@ -119,7 +122,7 @@ export default function forgetPassword() {
                         </button>
                     }
                 />
-                <Button color="primary" variant="shadow" type="submit">
+                <Button color="primary" variant="shadow" type="submit" isLoading={isLoading}>
                     Enviar contraseña
                 </Button>
             </form>

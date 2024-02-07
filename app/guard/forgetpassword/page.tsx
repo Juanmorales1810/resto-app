@@ -1,12 +1,14 @@
 "use client";
 
 import { useAuthFetch } from "@/hooks/useAuthFetch";
+import { useLoading } from "@/hooks/useLoading";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { useForm } from "react-hook-form";
 import { Link } from "@nextui-org/link";
 import React from "react";
 export default function forgetPassword() {
+    const { finishLoading, isLoading, startLoading } = useLoading()
     const {
         register,
         handleSubmit,
@@ -14,11 +16,12 @@ export default function forgetPassword() {
     } = useForm();
     const authFetch = useAuthFetch()
     const onSubmit = handleSubmit(async ({ Email: email }) => {
+        startLoading()
         await authFetch({
             endpoint: 'forget-password',
             formData: { email }
         })
-
+        finishLoading()
     });
     return (
         <div className="h-96 max-w-md gap-4 w-full justify-center items-center p-4 bg-slate-200 rounded-xl z-50">
@@ -46,7 +49,7 @@ export default function forgetPassword() {
                     isInvalid={!!errors.Email}
                     errorMessage={errors.Email && `${errors.Email.message}`}
                 />
-                <Button color="primary" variant="shadow" type="submit">
+                <Button color="primary" variant="shadow" type="submit" isLoading={isLoading}>
                     Enviar correo
                 </Button>
             </form>

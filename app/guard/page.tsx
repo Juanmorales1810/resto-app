@@ -2,6 +2,7 @@
 
 import { EyeFilledIcon, EyeSlashFilledIcon } from "@/components/icons";
 import { useAuthFetch } from "@/hooks/useAuthFetch";
+import { useLoading } from "@/hooks/useLoading";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { useForm } from "react-hook-form";
@@ -11,6 +12,7 @@ import React from "react";
 
 export default function Sesion() {
     const [isVisible, setIsVisible] = React.useState(false);
+    const { finishLoading, isLoading, startLoading } = useLoading()
 
     const toggleVisibility = () => setIsVisible(!isVisible);
     const {
@@ -20,12 +22,13 @@ export default function Sesion() {
     } = useForm();
     const authFetch = useAuthFetch()
     const onSubmit = handleSubmit(async ({ Email: email, Contraseña: password }) => {
+        startLoading()
         await authFetch({
             endpoint: 'login',
             redirectRoute: '/admin',
             formData: { email, password }
         })
-
+        finishLoading()
     });
     return (
 
@@ -82,7 +85,7 @@ export default function Sesion() {
                         </button>
                     }
                 />
-                <Button color="primary" variant="shadow" type="submit">
+                <Button color="primary" variant="shadow" type="submit" isLoading={isLoading}>
                     Iniciar sesión
                 </Button>
             </form>
