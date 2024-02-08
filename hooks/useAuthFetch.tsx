@@ -28,11 +28,7 @@ export function useAuthFetch() {
 
             if (redirectRoute) router.push(redirectRoute)
         } catch (error: any) {
-            console.log(formData);
             console.log(error.response.data.message);
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
         }
     }
 

@@ -1,4 +1,25 @@
-import mongoose, { Schema, Document, ObjectId } from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
+
+interface IMenuItem {
+    name: string;
+    price: number;
+}
+
+interface ISubcategory {
+    name: string;
+    items: IMenuItem[];
+}
+
+interface ICategory {
+    name: string;
+    subcategories: ISubcategory[];
+}
+
+export interface IMenu {
+    categories: ICategory[];
+}
+
+export interface IMenuDocument extends Document, IMenu {}
 
 // Definir el esquema para los elementos del menú
 const menuItemSchema = new Schema({

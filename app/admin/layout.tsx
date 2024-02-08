@@ -1,5 +1,5 @@
 "use client";
-import { Logo } from "@/components/icons";
+import { Chat, Contact, Dev, Home, Logo, Logout, Order, PriceList, Returns, Ticket } from "@/components/icons";
 import {
     Sidebar,
     useSidebar,
@@ -10,6 +10,8 @@ import {
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import axios from 'axios';
+import { useRouter } from 'next/navigation'
 
 export default function AboutLayout({
     children,
@@ -19,9 +21,21 @@ export default function AboutLayout({
     const [expanded, setExpanded] = useState(true);
     const [mobile, setMobile] = useState(false);
     const sidebar = useSidebar();
+    const router = useRouter()
+    const logout = async () => {
+        try {
+            const res = await axios.delete('/api/auth/logout');
+
+            if (res.status === 200) {
+                router.push('/guard');
+            }
+        } catch (error) {
+            console.error('Error al cerrar la sesión', error);
+        }
+    };
     return (
         <div className="relative flex flex-row w-full h-full min-h-[35rem]">
-            <Sidebar
+            <Sidebar color="dark"
                 onToggle={(state: SidebarState) => {
                     setExpanded(state.expanded);
                     setMobile(state.mobile);
@@ -30,19 +44,19 @@ export default function AboutLayout({
                 <Sidebar.Head>
                     <Sidebar.Head.Logo>
                         <Image
-                            src="/favicon.ico"
+                            src="/logo2.webp"
                             width={48}
                             height={48}
-                            alt="Rewind-UI"
+                            alt="Lo del pibe"
                         />
                     </Sidebar.Head.Logo>
-                    <Sidebar.Head.Title>Resto</Sidebar.Head.Title>
+                    <Sidebar.Head.Title>Lo del pibe</Sidebar.Head.Title>
                 </Sidebar.Head>
 
                 <Sidebar.Nav>
                     <Sidebar.Nav.Section>
                         <Sidebar.Nav.Section.Item
-                            icon={<Logo />}
+                            icon={<Home />}
                             label="Inicio"
                             href="/admin"
                             as={Link}
@@ -54,25 +68,25 @@ export default function AboutLayout({
                             Gestión
                         </Sidebar.Nav.Section.Title>
                         <Sidebar.Nav.Section.Item
-                            icon={<Logo />}
+                            icon={<Order />}
                             label="Ordenes"
                             href="/admin/ordenes"
                             as={Link}
                         />
                         <Sidebar.Nav.Section.Item
-                            icon={<Logo />}
+                            icon={<Chat />}
                             label="Chat"
                             href="/admin/chat"
                             as={Link}
                         />
                         <Sidebar.Nav.Section.Item
-                            icon={<Logo />}
+                            icon={<PriceList />}
                             label="Lista de precios"
                             href="/admin/price"
                             as={Link}
                         />
                         <Sidebar.Nav.Section.Item
-                            icon={<Logo />}
+                            icon={<Returns />}
                             label="Rendiminetos"
                             href="/admin/returns"
                             as={Link}
@@ -84,20 +98,28 @@ export default function AboutLayout({
                             Soporte
                         </Sidebar.Nav.Section.Title>
                         <Sidebar.Nav.Section.Item
-                            icon={<Logo />}
+                            icon={<Contact />}
                             label="Contacto"
                             href="#"
                         />
                         <Sidebar.Nav.Section.Item
-                            icon={<Logo />}
+                            icon={<Ticket />}
                             label="Tickets"
                             href="#"
                         />
                         <Sidebar.Separator />
                         <Sidebar.Nav.Section.Item
-                            icon={<Logo />}
+                            icon={<Dev />}
                             label="Documentación"
                             href="#"
+                        />
+                        <Sidebar.Separator />
+                        <Sidebar.Nav.Section.Item
+                            icon={<Logout />}
+                            label="Cerrar sesión"
+                            href="#"
+                            as={Button}
+                            onClick={logout}
                         />
                     </Sidebar.Nav.Section>
                 </Sidebar.Nav>
@@ -106,14 +128,14 @@ export default function AboutLayout({
                     <div className="flex flex-col justify-center items-center text-sm">
                         <span className="font-semibold">Admin</span>
                         <span>version 1.0.0</span>
+                        <span>© 2024</span>
                     </div>
                 </Sidebar.Footer>
             </Sidebar>
 
             <main
-                className={`transition-all transform duration-100 text-slate-700 flex w-full flex-col items-center ${
-                    expanded ? "md:ml-64" : "md:ml-20"
-                }`}
+                className={`transition-all transform duration-100 text-slate-700 flex w-full flex-col items-center ${expanded ? "md:ml-64" : "md:ml-20"
+                    }`}
             >
                 {mobile && (
                     <Overlay
@@ -150,7 +172,7 @@ export default function AboutLayout({
                     </Button>
                 </header>
 
-                <div className="w-full h-full p-4">{children}</div>
+                <div className="w-full h-[calc(100vh-64px)]  p-4">{children}</div>
             </main>
         </div>
     );
