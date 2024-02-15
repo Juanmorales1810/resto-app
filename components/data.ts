@@ -1,4 +1,3 @@
-import React from "react";
 const columns = [
     { name: "ID", uid: "id", sortable: true },
     { name: "NAME", uid: "name", sortable: true },
@@ -13,7 +12,6 @@ const columns = [
 const statusOptions = [
     { name: "Active", uid: "active" },
     { name: "Paused", uid: "paused" },
-    { name: "Vacation", uid: "vacation" },
 ];
 
 const users = [
@@ -73,7 +71,7 @@ const users = [
         role: "P. Manager",
         team: "Management",
         age: "29",
-        avatar: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
+        avatar: "https://i.pravatar.cc/150?u=a042581f4e290260127d",
         email: "brian.kim@example.com",
         status: "Active",
     },

@@ -28,7 +28,6 @@ import { capitalize } from "@/utils/capitalize";
 const statusColorMap: Record<string, ChipProps["color"]> = {
     active: "success",
     paused: "danger",
-    vacation: "warning",
 };
 
 const INITIAL_VISIBLE_COLUMNS = ["name", "role", "status", "actions"];
@@ -174,7 +173,7 @@ export default function App() {
 
     const topContent = React.useMemo(() => {
         return (
-            <div className="flex flex-col h-full gap-4">
+            <div className="flex flex-col gap-4">
                 <div className="flex justify-between gap-3 items-end">
                     <Input
                         isClearable
@@ -200,8 +199,8 @@ export default function App() {
                                 selectionMode="multiple"
                                 onSelectionChange={setStatusFilter}
                             >
-                                {statusOptions.map((status, index) => (
-                                    <DropdownItem key={index} className="capitalize">
+                                {statusOptions.map((status) => (
+                                    <DropdownItem key={status.uid} className="capitalize">
                                         {capitalize(status.name)}
                                     </DropdownItem>
                                 ))}
@@ -221,8 +220,8 @@ export default function App() {
                                 selectionMode="multiple"
                                 onSelectionChange={setVisibleColumns}
                             >
-                                {columns.map((column, index) => (
-                                    <DropdownItem key={index} className="capitalize">
+                                {columns.map((column) => (
+                                    <DropdownItem key={column.uid} className="capitalize">
                                         {capitalize(column.name)}
                                     </DropdownItem>
                                 ))}
@@ -241,6 +240,7 @@ export default function App() {
                             className="bg-transparent outline-none text-default-400 text-small"
                             onChange={onRowsPerPageChange}
                         >
+
                             <option value="10">10</option>
                             <option value="15">15</option>
                         </select>
@@ -294,7 +294,7 @@ export default function App() {
             bottomContent={bottomContent}
             bottomContentPlacement="outside"
             classNames={{
-                wrapper: "max-h-[692px]",
+                wrapper: "max-h-[782px]",
             }}
             selectedKeys={selectedKeys}
             selectionMode="multiple"
