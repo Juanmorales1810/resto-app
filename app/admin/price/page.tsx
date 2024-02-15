@@ -294,7 +294,7 @@ export default function App() {
             bottomContent={bottomContent}
             bottomContentPlacement="outside"
             classNames={{
-                wrapper: "max-h-[782px]",
+                wrapper: "max-h-[730px]",
             }}
             selectedKeys={selectedKeys}
             selectionMode="multiple"

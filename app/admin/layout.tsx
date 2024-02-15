@@ -1,5 +1,5 @@
 "use client";
-import { Chat, Contact, Dev, Home, Logo, Logout, Order, PriceList, Returns, Ticket } from "@/components/icons";
+import { Chat, Contact, Dev, Home, Logout, Order, PriceList, Returns, Ticket } from "@/components/icons";
 import {
     Sidebar,
     useSidebar,
@@ -134,7 +134,7 @@ export default function AboutLayout({
             </Sidebar>
 
             <main
-                className={`transition-all transform duration-100 text-slate-700 flex w-full flex-col items-center ${expanded ? "md:ml-64" : "md:ml-20"
+                className={`transition-all transform duration-100 text-slate-700 flex w-full h-screen flex-col items-center ${expanded ? "md:ml-64" : "md:ml-20"
                     }`}
             >
                 {mobile && (
@@ -146,7 +146,7 @@ export default function AboutLayout({
                         className="md:hidden z-40"
                     />
                 )}
-                <header className="flex flex-row sticky top-0 px-8 items-center w-full shadow-sm min-h-[4rem]">
+                <header className="flex flex-row sticky top-0 px-8 items-center w-full shadow-sm min-h-[4rem] md:hidden">
                     <span className="text-4xl text-white">Panel</span>
 
                     <Button
