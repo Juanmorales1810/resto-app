@@ -28,6 +28,7 @@ export default function AboutLayout({
 
             if (res.status === 200) {
                 router.push('/guard');
+                router.refresh();
             }
         } catch (error) {
             console.error('Error al cerrar la sesión', error);

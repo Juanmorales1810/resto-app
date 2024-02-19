@@ -2,49 +2,32 @@ import mongoose, { Schema, Document } from "mongoose";
 
 interface IMenuItem {
     name: string;
+    description: string;
+    image: string;
     price: number;
+    category: string;
 }
 
-interface ISubcategory {
-    name: string;
-    items: IMenuItem[];
-}
-
-interface ICategory {
-    name: string;
-    subcategories: ISubcategory[];
-}
-
-export interface IMenu {
-    categories: ICategory[];
-}
-
-export interface IMenuDocument extends Document, IMenu {}
+export interface IMenuDocument extends Document, IMenuItem {}
 
 // Definir el esquema para los elementos del menú
-const menuItemSchema = new Schema({
-    name: { type: String, required: true },
-    price: { type: Number, required: true },
-});
+const ItemSchema = new Schema(
+    {
+        name: { type: String, required: true, unique: true, trim: true },
+        description: { type: String, required: true, trim: true },
+        image: { type: String, required: true },
+        price: { type: Number, required: true, trim: true },
+        category: { type: String, required: true, trim: true },
+    },
+    {
+        timestamps: true,
+        versionKey: false,
+    }
+);
 
 // Definir el esquema para las subcategorías
-const subcategorySchema = new Schema({
-    name: { type: String, required: true },
-    items: [menuItemSchema], // Relación uno a muchos con los elementos del menú
-});
-
-// Definir el esquema para las categorías
-const categorySchema = new Schema({
-    name: { type: String, required: true },
-    subcategories: [subcategorySchema], // Relación uno a muchos con las subcategorías
-});
-
-// Definir el esquema principal para el menú
-const menuSchema = new Schema({
-    categories: [categorySchema], // Relación uno a muchos con las categorías
-});
 
 // Crear el modelo utilizando el esquema
-const Menu = mongoose.models.Menu || mongoose.model("Menu", menuSchema);
+const Menu = mongoose.models.Menu || mongoose.model("Menu", ItemSchema);
 
 export default Menu;
