@@ -24,7 +24,7 @@ export default function Sesion() {
     const onSubmit = handleSubmit(async ({ Email: email, Contraseña: password }) => {
         startLoading()
         await authFetch({
-            endpoint: 'login',
+            endpoint: 'auth/login',
             redirectRoute: '/admin',
             formData: { email, password }
         })

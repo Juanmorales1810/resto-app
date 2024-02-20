@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-interface IMenuItem {
+interface IMenu {
     name: string;
     description: string;
     image: string;
@@ -8,7 +8,13 @@ interface IMenuItem {
     category: string;
 }
 
-export interface IMenuDocument extends Document, IMenuItem {}
+export interface IMenuSchema extends Document {
+    name: string;
+    description: string;
+    image: string;
+    price: number;
+    category: string;
+}
 
 // Definir el esquema para los elementos del menú
 const ItemSchema = new Schema(
@@ -24,8 +30,6 @@ const ItemSchema = new Schema(
         versionKey: false,
     }
 );
-
-// Definir el esquema para las subcategorías
 
 // Crear el modelo utilizando el esquema
 const Menu = mongoose.models.Menu || mongoose.model("Menu", ItemSchema);

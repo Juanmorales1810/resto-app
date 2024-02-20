@@ -9,6 +9,8 @@ export const messages = {
         incorrectPassword: "Contraseña incorrecta",
         notAuthorized: "No autorizado",
         tokenNotValid: "Token no valido",
+        menuExist: "Ya existe un menu con ese nombre",
+        imageNotUploaded: "No se pudo subir la imagen",
     },
     success: {
         userCreated: "Usuario creado correctamente",
@@ -16,5 +18,6 @@ export const messages = {
         emailSent: "Correo enviado correctamente",
         passwordChanged: "Contraseña cambiada correctamente",
         authorized: "Autorizado",
+        menuCreated: "Menu creado correctamente",
     },
 };
