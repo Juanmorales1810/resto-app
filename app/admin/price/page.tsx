@@ -22,8 +22,10 @@ import {
     SortDescriptor
 } from "@nextui-org/react";
 import { SearchIcon, ChevronDownIcon, VerticalDotsIcon, PlusIcon } from "@/components/icons";
-import { columns, users, statusOptions } from "@/components/data";
+import { columns, statusOptions } from "@/components/data";
 import { capitalize } from "@/utils/capitalize";
+import { useAsyncList } from "@react-stately/data";
+
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
     active: "success",
@@ -32,9 +34,35 @@ const statusColorMap: Record<string, ChipProps["color"]> = {
 
 const INITIAL_VISIBLE_COLUMNS = ["name", "role", "status", "actions"];
 
-type User = typeof users[0];
+
+type Imenu = {
+    _id: string;
+    name: string;
+    description: string;
+    image: string;
+    price: number;
+    category: string;
+};
+
 
 export default function App() {
+    const [isLoading, setIsLoading] = React.useState(true);
+
+    let list = useAsyncList({
+        async load({ signal }) {
+            let res = await fetch('http://localhost:3000/api/catalogo', {
+                signal,
+            });
+            let json = await res.json();
+
+            setIsLoading(false);
+            return {
+                items: json,
+            };
+        }
+    })
+    const products = list.items;
+
     const [filterValue, setFilterValue] = React.useState("");
     const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set([]));
     const [visibleColumns, setVisibleColumns] = React.useState<Selection>(new Set(INITIAL_VISIBLE_COLUMNS));
@@ -44,7 +72,6 @@ export default function App() {
         column: "age",
         direction: "ascending",
     });
-
     const [page, setPage] = React.useState(1);
 
     const hasSearchFilter = Boolean(filterValue);
@@ -56,21 +83,24 @@ export default function App() {
     }, [visibleColumns]);
 
     const filteredItems = React.useMemo(() => {
-        let filteredUsers = [...users];
+        let filteredUsers = [...products];
 
         if (hasSearchFilter) {
-            filteredUsers = filteredUsers.filter((user) =>
+            filteredUsers = filteredUsers.filter((user: any) =>
                 user.name.toLowerCase().includes(filterValue.toLowerCase()),
             );
         }
-        if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
-            filteredUsers = filteredUsers.filter((user) =>
-                Array.from(statusFilter).includes(user.status),
-            );
-        }
+        // if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
+        //     filteredUsers = filteredUsers.filter((user) =>
+        //         Array.from(statusFilter).includes(user.status),
+        //     );
+        // }
 
         return filteredUsers;
-    }, [users, filterValue, statusFilter]);
+    }, [products, filterValue, statusFilter]);
+    console.log(filteredItems);
+
+
 
     const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -82,42 +112,41 @@ export default function App() {
     }, [page, filteredItems, rowsPerPage]);
 
     const sortedItems = React.useMemo(() => {
-        return [...items].sort((a: User, b: User) => {
-            const first = a[sortDescriptor.column as keyof User] as number;
-            const second = b[sortDescriptor.column as keyof User] as number;
+        return [...items].sort((a: any, b: any) => {
+            const first = a[sortDescriptor.column as keyof Imenu] as number;
+            const second = b[sortDescriptor.column as keyof Imenu] as number;
             const cmp = first < second ? -1 : first > second ? 1 : 0;
 
             return sortDescriptor.direction === "descending" ? -cmp : cmp;
         });
     }, [sortDescriptor, items]);
 
-    const renderCell = React.useCallback((user: User, columnKey: React.Key) => {
-        const cellValue = user[columnKey as keyof User];
+    const renderCell = React.useCallback((user: Imenu, columnKey: React.Key) => {
+        const cellValue = user[columnKey as keyof Imenu];
 
         switch (columnKey) {
             case "name":
                 return (
                     <User
-                        avatarProps={{ radius: "lg", src: user.avatar }}
-                        description={user.email}
+                        avatarProps={{ radius: "lg", src: user.image }}
+                        description={user.name}
                         name={cellValue}
                     >
-                        {user.email}
                     </User>
                 );
             case "role":
                 return (
                     <div className="flex flex-col">
                         <p className="text-bold text-small capitalize">{cellValue}</p>
-                        <p className="text-bold text-tiny capitalize text-default-400">{user.team}</p>
+                        <p className="text-bold text-tiny capitalize text-default-400">{user.category}</p>
                     </div>
                 );
-            case "status":
-                return (
-                    <Chip className="capitalize" color={statusColorMap[user.status]} size="sm" variant="flat">
-                        {cellValue}
-                    </Chip>
-                );
+            // case "status":
+            //     return (
+            //         <Chip className="capitalize" color={statusColorMap[user.status]} size="sm" variant="flat">
+            //             {cellValue}
+            //         </Chip>
+            //     );
             case "actions":
                 return (
                     <div className="relative flex justify-end items-center gap-2">
@@ -128,9 +157,9 @@ export default function App() {
                                 </Button>
                             </DropdownTrigger>
                             <DropdownMenu>
-                                <DropdownItem>View</DropdownItem>
-                                <DropdownItem>Edit</DropdownItem>
-                                <DropdownItem>Delete</DropdownItem>
+                                <DropdownItem>Ver</DropdownItem>
+                                <DropdownItem>Editar</DropdownItem>
+                                <DropdownItem>Borrar</DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
                     </div>
@@ -233,7 +262,7 @@ export default function App() {
                     </div>
                 </div>
                 <div className="flex justify-between items-center">
-                    <span className="text-default-400 text-small">Total {users.length} users</span>
+                    <span className="text-default-400 text-small">Total {products.length} users</span>
                     <label className="flex items-center text-default-400 text-small">
                         Rows per page:
                         <select
@@ -254,7 +283,7 @@ export default function App() {
         visibleColumns,
         onSearchChange,
         onRowsPerPageChange,
-        users.length,
+        products.length,
         hasSearchFilter,
     ]);
 
@@ -315,13 +344,13 @@ export default function App() {
                     </TableColumn>
                 )}
             </TableHeader>
-            <TableBody emptyContent={"No users found"} items={sortedItems}>
-                {(item) => (
-                    <TableRow key={item.id}>
+            <TableBody emptyContent={"No users found"} items={sortedItems} isLoading={isLoading}>
+                {(item: Imenu) => (
+                    <TableRow key={item._id}>
                         {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
                     </TableRow>
                 )}
             </TableBody>
-        </Table>
+        </Table >
     );
 }

@@ -73,12 +73,9 @@ export async function POST(NextRequest: NextRequest) {
             category,
             image: imageUrl,
         });
-        console.log(body);
         const obj = JSON.parse(body);
         console.log(obj);
         const menuFind = await Menu.findOne({ name });
-        console.log(menuFind);
-        console.log(name);
 
         if (menuFind) {
             return NextResponse.json(
