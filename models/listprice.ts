@@ -5,6 +5,7 @@ interface IMenu {
     description: string;
     image: string;
     price: number;
+    status: string;
     category: string;
 }
 
@@ -13,6 +14,7 @@ export interface IMenuSchema extends Document {
     description: string;
     image: string;
     price: number;
+    status: string;
     category: string;
 }
 
@@ -23,6 +25,7 @@ const ItemSchema = new Schema(
         description: { type: String, required: true, trim: true },
         image: { type: String, required: true },
         price: { type: Number, required: true, trim: true },
+        status: { type: String, required: true, trim: true },
         category: { type: String, required: true, trim: true },
     },
     {

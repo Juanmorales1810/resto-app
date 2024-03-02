@@ -19,9 +19,10 @@ import {
     Pagination,
     Selection,
     ChipProps,
-    SortDescriptor
+    SortDescriptor,
+    Tooltip
 } from "@nextui-org/react";
-import { SearchIcon, ChevronDownIcon, VerticalDotsIcon, PlusIcon } from "@/components/icons";
+import { SearchIcon, ChevronDownIcon, VerticalDotsIcon, PlusIcon, EyeIcon, EditIcon, DeleteIcon } from "@/components/icons";
 import { columns, statusOptions } from "@/components/data";
 import { capitalize } from "@/utils/capitalize";
 import { useAsyncList } from "@react-stately/data";
@@ -41,6 +42,7 @@ type Imenu = {
     description: string;
     image: string;
     price: number;
+    status: string;
     category: string;
 };
 
@@ -90,11 +92,11 @@ export default function App() {
                 user.name.toLowerCase().includes(filterValue.toLowerCase()),
             );
         }
-        // if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
-        //     filteredUsers = filteredUsers.filter((user) =>
-        //         Array.from(statusFilter).includes(user.status),
-        //     );
-        // }
+        if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
+            filteredUsers = filteredUsers.filter((user: any) =>
+                Array.from(statusFilter).includes(user.status),
+            );
+        }
 
         return filteredUsers;
     }, [products, filterValue, statusFilter]);
@@ -141,27 +143,32 @@ export default function App() {
                         <p className="text-bold text-tiny capitalize text-default-400">{user.category}</p>
                     </div>
                 );
-            // case "status":
-            //     return (
-            //         <Chip className="capitalize" color={statusColorMap[user.status]} size="sm" variant="flat">
-            //             {cellValue}
-            //         </Chip>
-            //     );
+            case "status":
+                return (
+                    <Chip className="capitalize" color={statusColorMap[user.status]} size="sm" variant="flat">
+                        {cellValue}
+                    </Chip>
+                );
             case "actions":
                 return (
                     <div className="relative flex justify-end items-center gap-2">
-                        <Dropdown>
-                            <DropdownTrigger>
-                                <Button isIconOnly size="sm" variant="light">
-                                    <VerticalDotsIcon className="text-default-300" />
-                                </Button>
-                            </DropdownTrigger>
-                            <DropdownMenu>
-                                <DropdownItem>Ver</DropdownItem>
-                                <DropdownItem>Editar</DropdownItem>
-                                <DropdownItem>Borrar</DropdownItem>
-                            </DropdownMenu>
-                        </Dropdown>
+                        <div className="relative flex items-center gap-2">
+                            <Tooltip content="Details">
+                                <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                                    <EyeIcon />
+                                </span>
+                            </Tooltip>
+                            <Tooltip content="Edit user">
+                                <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                                    <EditIcon />
+                                </span>
+                            </Tooltip>
+                            <Tooltip color="danger" content="Delete user">
+                                <span className="text-lg text-danger cursor-pointer active:opacity-50">
+                                    <DeleteIcon />
+                                </span>
+                            </Tooltip>
+                        </div>
                     </div>
                 );
             default:
@@ -306,10 +313,10 @@ export default function App() {
                 />
                 <div className="hidden sm:flex w-[30%] justify-end gap-2">
                     <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onPreviousPage}>
-                        Previous
+                        Anterior
                     </Button>
                     <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onNextPage}>
-                        Next
+                        Siguiente
                     </Button>
                 </div>
             </div>

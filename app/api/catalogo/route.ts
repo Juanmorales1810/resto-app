@@ -24,9 +24,10 @@ export async function POST(NextRequest: NextRequest) {
         const name = data.get("name");
         const description = data.get("description");
         const price = data.get("price");
+        const status = data.get("status");
         const category = data.get("category");
 
-        if (!name || !description || !image || !price || !category) {
+        if (!name || !description || !image || !price || !status || !category) {
             return NextResponse.json(
                 {
                     message: messages.error.needProps,
@@ -70,6 +71,7 @@ export async function POST(NextRequest: NextRequest) {
             name,
             description,
             price,
+            status,
             category,
             image: imageUrl,
         });
@@ -89,6 +91,7 @@ export async function POST(NextRequest: NextRequest) {
             description,
             image: imageUrl,
             price,
+            status,
             category,
         });
         const newMenu: IMenuSchema = new Menu({
@@ -96,6 +99,7 @@ export async function POST(NextRequest: NextRequest) {
             description,
             image: imageUrl,
             price,
+            status,
             category,
         });
         const savedMenu = await newMenu.save();
