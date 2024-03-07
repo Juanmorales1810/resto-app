@@ -20,7 +20,8 @@ import {
     Selection,
     ChipProps,
     SortDescriptor,
-    Tooltip
+    Tooltip,
+    Spinner
 } from "@nextui-org/react";
 import { SearchIcon, ChevronDownIcon, VerticalDotsIcon, PlusIcon, EyeIcon, EditIcon, DeleteIcon } from "@/components/icons";
 import { columns, statusOptions } from "@/components/data";
@@ -351,7 +352,8 @@ export default function App() {
                     </TableColumn>
                 )}
             </TableHeader>
-            <TableBody emptyContent={"No users found"} items={sortedItems} isLoading={isLoading}>
+            <TableBody emptyContent={isLoading ? "Cargando" : "No users found"} items={sortedItems} isLoading={isLoading}
+                loadingContent={<Spinner className="top-20" />}>
                 {(item: Imenu) => (
                     <TableRow key={item._id}>
                         {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}

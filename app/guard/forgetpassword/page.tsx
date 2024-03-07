@@ -7,7 +7,7 @@ import { Input } from "@nextui-org/input";
 import { useForm } from "react-hook-form";
 import { Link } from "@nextui-org/link";
 import React from "react";
-export default function forgetPassword() {
+export default function ForgetPassword() {
     const { finishLoading, isLoading, startLoading } = useLoading()
     const {
         register,

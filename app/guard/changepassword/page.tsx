@@ -12,7 +12,7 @@ import React from "react";
 import { AxiosRequestConfig } from "axios";
 
 
-export default function forgetPassword() {
+export default function ForgetPassword() {
     const [isVisible, setIsVisible] = React.useState(false);
     const { finishLoading, isLoading, startLoading } = useLoading()
 
