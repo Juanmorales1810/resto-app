@@ -62,9 +62,9 @@ export default function Form() {
         finishLoading()
     });
     return (
-        <section className="flex justify-center items-center w-full h-[calc(100vh-20px)] gap-10">
-            <div>
-                <h1 className="text-3xl font-bold py-3">Nuevo producto</h1>
+        <section className="flex flex-col lg:flex-row justify-center items-center w-full h-[calc(100vh-20px)] gap-20">
+            <div className="w-96 h-[600px]">
+                <h1 className="text-3xl text-white font-bold ">Nuevo producto</h1>
                 <div className="flex flex-col justify-center items-center w-full h-full">
                     <form onSubmit={onSubmit} className="flex flex-col gap-4 w-96">
                         <Input
@@ -167,8 +167,8 @@ export default function Form() {
                     </form>
                 </div>
             </div>
-            <div>
-                <h1 className="text-3xl font-bold py-4">Vista previa</h1>
+            <div className="flex flex-col w-96 h-[600px] gap-16">
+                <h1 className="text-3xl text-white font-bold ">Vista previa</h1>
                 <Card className="max-w-[250px]">
                     <CardHeader className="flex gap-3">
 

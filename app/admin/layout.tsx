@@ -8,10 +8,10 @@ import {
     Button,
 } from "@rewind-ui/core";
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import axios from 'axios';
 import { useRouter } from 'next/navigation'
+import { Image } from "@nextui-org/image";
 
 export default function AboutLayout({
     children,

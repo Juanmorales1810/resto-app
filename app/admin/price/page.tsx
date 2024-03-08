@@ -27,6 +27,7 @@ import { SearchIcon, ChevronDownIcon, VerticalDotsIcon, PlusIcon, EyeIcon, EditI
 import { columns, statusOptions } from "@/components/data";
 import { capitalize } from "@/utils/capitalize";
 import { useAsyncList } from "@react-stately/data";
+import Link from "next/link";
 
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
@@ -152,7 +153,7 @@ export default function App() {
                 );
             case "actions":
                 return (
-                    <div className="relative flex justify-end items-center gap-2">
+                    <div className="relative flex justify-start items-center gap-2">
                         <div className="relative flex items-center gap-2">
                             <Tooltip content="Detalles">
                                 <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
@@ -225,7 +226,7 @@ export default function App() {
                         <Dropdown>
                             <DropdownTrigger className="hidden sm:flex">
                                 <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">
-                                    Status
+                                    Estados
                                 </Button>
                             </DropdownTrigger>
                             <DropdownMenu
@@ -246,7 +247,7 @@ export default function App() {
                         <Dropdown>
                             <DropdownTrigger className="hidden sm:flex">
                                 <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">
-                                    Columns
+                                    Columnas
                                 </Button>
                             </DropdownTrigger>
                             <DropdownMenu
@@ -264,15 +265,15 @@ export default function App() {
                                 ))}
                             </DropdownMenu>
                         </Dropdown>
-                        <Button color="primary" endContent={<PlusIcon />}>
-                            Add New
+                        <Button href="/admin/price/item/new" as={Link} color="primary" endContent={<PlusIcon />}>
+                            Nuevo
                         </Button>
                     </div>
                 </div>
                 <div className="flex justify-between items-center">
                     <span className="text-default-400 text-small">Total {products.length} users</span>
                     <label className="flex items-center text-default-400 text-small">
-                        Rows per page:
+                        Items por pagina:
                         <select
                             className="bg-transparent outline-none text-default-400 text-small"
                             onChange={onRowsPerPageChange}
@@ -326,7 +327,7 @@ export default function App() {
 
     return (
         <Table
-            aria-label="Example table with custom cells, pagination and sorting"
+            aria-label="Tabla de items"
             isHeaderSticky
             bottomContent={bottomContent}
             bottomContentPlacement="outside"
@@ -347,6 +348,7 @@ export default function App() {
                         key={column.uid}
                         align={column.uid === "actions" ? "center" : "start"}
                         allowsSorting={column.sortable}
+                        aria-label={column.name}
                     >
                         {column.name}
                     </TableColumn>
@@ -355,7 +357,7 @@ export default function App() {
             <TableBody emptyContent={isLoading ? "Cargando" : "No users found"} items={sortedItems as Iterable<Imenu>} isLoading={isLoading}
                 loadingContent={<Spinner className="top-20" />}>
                 {(item: Imenu) => (
-                    <TableRow key={item._id}>
+                    <TableRow key={item._id} aria-label={`Columna ${item.name}`}>
                         {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
                     </TableRow>
                 )}
