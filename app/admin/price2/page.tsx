@@ -1,6 +1,6 @@
 import { connectMongoDB } from "@/libs/mongodb";
 import Menu from "@/models/listprice";
-import Image from "next/image";
+import { Image } from "@nextui-org/image";
 
 export async function loadTasks() {
     await connectMongoDB();
