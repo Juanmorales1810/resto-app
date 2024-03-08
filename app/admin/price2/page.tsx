@@ -1,5 +1,6 @@
 import { connectMongoDB } from "@/libs/mongodb";
 import Menu from "@/models/listprice";
+import Image from "next/image";
 
 export async function loadTasks() {
     await connectMongoDB();
@@ -28,10 +29,12 @@ export default async function App() {
                         <tr className="hover:bg-gray-50" key={item._id}>
                             <th className="flex gap-3 px-6 py-4 font-normal text-gray-900">
                                 <div className="relative h-10 w-10">
-                                    <img
+                                    <Image
                                         className="h-full w-full rounded-full object-cover object-center"
                                         src={item.image}
-                                        alt=""
+                                        alt={item.name}
+                                        width={40}
+                                        height={40}
                                     />
                                     <span className="absolute right-0 bottom-0 h-2 w-2 rounded-full bg-green-400 ring ring-white"></span>
                                 </div>
