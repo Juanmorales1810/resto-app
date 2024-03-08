@@ -154,17 +154,17 @@ export default function App() {
                 return (
                     <div className="relative flex justify-end items-center gap-2">
                         <div className="relative flex items-center gap-2">
-                            <Tooltip content="Details">
+                            <Tooltip content="Detalles">
                                 <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
                                     <EyeIcon />
                                 </span>
                             </Tooltip>
-                            <Tooltip content="Edit user">
+                            <Tooltip content="Editar">
                                 <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
                                     <EditIcon />
                                 </span>
                             </Tooltip>
-                            <Tooltip color="danger" content="Delete user">
+                            <Tooltip color="danger" content="Borrar">
                                 <span className="text-lg text-danger cursor-pointer active:opacity-50">
                                     <DeleteIcon />
                                 </span>
@@ -352,7 +352,7 @@ export default function App() {
                     </TableColumn>
                 )}
             </TableHeader>
-            <TableBody emptyContent={isLoading ? "Cargando" : "No users found"} items={sortedItems} isLoading={isLoading}
+            <TableBody emptyContent={isLoading ? "Cargando" : "No users found"} items={sortedItems as Iterable<Imenu>} isLoading={isLoading}
                 loadingContent={<Spinner className="top-20" />}>
                 {(item: Imenu) => (
                     <TableRow key={item._id}>
