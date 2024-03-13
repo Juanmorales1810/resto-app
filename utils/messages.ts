@@ -19,5 +19,7 @@ export const messages = {
         passwordChanged: "Contraseña cambiada correctamente",
         authorized: "Autorizado",
         menuCreated: "Menu creado correctamente",
+        getMenu: "Menu obtenido correctamente",
+        getItme: "Item obtenido correctamente",
     },
 };
