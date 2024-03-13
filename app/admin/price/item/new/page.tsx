@@ -1,6 +1,6 @@
 "use client";
 
-import { Input, Select, Textarea, SelectItem, Button, Card, CardHeader, CardBody, CardFooter, Divider, Link, Image } from "@nextui-org/react";
+import { Input, Select, Textarea, SelectItem, Button, Card, CardHeader, CardBody, CardFooter, Divider, Link, Image, Spinner } from "@nextui-org/react";
 import React, { ChangeEvent, useState, useEffect, Suspense } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { useAuthFetch } from "@/hooks/useAuthFetch";
@@ -51,11 +51,15 @@ export default function Form() {
     const router = useRouter();
     //Obtener datos
     const getTask = async () => {
-        const res = await fetch(`/api/catalogo/${params.id}`);
-        const data = await res.json();
-        setNewTask({ name: data.name, description: data.description, price: data.price, category: data.category, status: data.status, image: data.image });
+        const data = await authFetch({
+            endpoint: `catalogo/${params.id}`,
+            method: 'get'
+        })
+        console.log(data.Item);
+
+        setNewTask({ name: data.Item.name, description: data.Item.description, price: data.Item.price, category: data.Item.category, status: data.Item.status, image: data.Item.image });
         setDatosCargados(true);
-    };
+    }
     useEffect(() => {
         if (params.id) {
             getTask();
@@ -69,20 +73,29 @@ export default function Form() {
         formState: { errors },
         watch
     } = useForm();
-    const selectedFile = watch('imagen')?.[0] || null;
     //Enviar datos
-    const onSubmit = handleSubmit(async ({ Nombre: name, Descripción: description, Image: image, Precio: price, Categoria: category }) => {
+    const onSubmit = handleSubmit(async ({ Nombre: name, Descripción: description, Precio: price, Categoria: category, Estado: status }) => {
         startLoading()
-
         const formData = new FormData();
         formData.append('name', name);
         formData.append('description', description);
         formData.append('price', price);
         formData.append('category', category);
+        formData.append('status', status);
         if (file) {
             formData.append('image', file);
         }
-
+        console.log(formData);
+        if (params.id) {
+            await authFetch({
+                endpoint: `catalogo/${params.id}`,
+                method: 'put',
+                redirectRoute: '/admin/price',
+                formData: formData
+            })
+            finishLoading()
+            return
+        }
         await authFetch({
             endpoint: 'catalogo',
             redirectRoute: '/admin/price',
@@ -93,7 +106,7 @@ export default function Form() {
     if (params.id) {
 
         if (!datosCargados) {
-            return <div>Cargando...</div>;
+            return <div className="flex justify-center items-center w-full h-auto min-h-[calc(100vh-16px)]"><Spinner label="Cargando..." size="lg" /></div>;
         }
     }
     return (
@@ -101,125 +114,111 @@ export default function Form() {
             <div className="w-96 h-[600px]">
                 <h1 className="text-3xl text-white font-bold ">Nuevo producto</h1>
                 <div className="flex flex-col justify-center items-center w-full h-full">
-                    <Suspense fallback={<p>Loading...</p>}>
-                        <form onSubmit={onSubmit} className="flex flex-col gap-4 w-96">
-                            <Input
-                                type="text"
-                                placeholder="Nombre"
-                                defaultValue={params.id ? newTask.name : ""}
-                                required {...register("Nombre", {
-                                    required: {
-                                        value: true,
-                                        message: "Nombre es requerido",
-                                    },
-                                    maxLength: {
-                                        value: 40,
-                                        message: "Nombre no puede ser mayor a 40 caracteres"
-                                    }
-                                })}
-                                isInvalid={!!errors.Nombre}
-                                errorMessage={errors.Nombre && `${errors.Nombre.message}`} />
+                    <form onSubmit={onSubmit} className="flex flex-col gap-4 w-96">
+                        <Input
+                            type="text"
+                            placeholder="Nombre"
+                            defaultValue={params.id ? newTask.name : ""}
+                            required {...register("Nombre", {
+                                required: {
+                                    value: true,
+                                    message: "Nombre es requerido",
+                                },
+                                maxLength: {
+                                    value: 40,
+                                    message: "Nombre no puede ser mayor a 40 caracteres"
+                                }
+                            })}
+                            isInvalid={!!errors.Nombre}
+                            errorMessage={errors.Nombre && `${errors.Nombre.message}`} />
 
-                            <Textarea
-                                placeholder="Descripción"
-                                required
-                                defaultValue={params.id ? newTask.description : ""}
-                                {...register("Descripción", {
-                                    required: {
-                                        value: true,
-                                        message: "Descripción es requerida",
-                                    },
-                                    maxLength: {
-                                        value: 300,
-                                        message: "Descripción no puede ser mayor a 300 caracteres"
-                                    }
+                        <Textarea
+                            placeholder="Descripción"
+                            required
+                            defaultValue={params.id ? newTask.description : ""}
+                            {...register("Descripción", {
+                                required: {
+                                    value: true,
+                                    message: "Descripción es requerida",
+                                },
+                                maxLength: {
+                                    value: 300,
+                                    message: "Descripción no puede ser mayor a 300 caracteres"
+                                }
 
-                                })}
-                                isInvalid={!!errors.Descripción}
-                                errorMessage={errors.Descripción && `${errors.Descripción.message}`} />
-                            <Input
-                                type="number"
-                                placeholder="Precio"
-                                required
-                                defaultValue={params.id ? newTask.price : ""}
-                                {...register("Precio", {
-                                    required: {
-                                        value: true,
-                                        message: "Precio es requerido",
-                                    },
-                                    pattern: {
-                                        value: /^[0-9]+$/,
-                                        message: "Precio no es valido",
-                                    },
-                                })}
-                                isInvalid={!!errors.Precio}
-                                errorMessage={errors.Precio && `${errors.Precio.message}`} />
-                            <Select
-                                label="Categoria"
-                                variant="faded"
-                                placeholder="Categoria"
-                                required
-                                {...register("Categoria", {
-                                    required: {
-                                        value: true,
-                                        message: "Categoria es requerido",
-                                    }
-                                })}
-                                isInvalid={!!errors.Categoria}
-                                errorMessage={errors.Categoria && `${errors.Categoria.message}`}
-                            >
-                                {category.map((data) => (
-                                    <SelectItem key={data.value} value={data.value}>
-                                        {data.label}
-                                    </SelectItem>
-                                ))}
-                            </Select>
-                            <Select
-                                label="Status"
-                                variant="faded"
-                                placeholder="Status"
-                                required
-                                {...register("Status", {
-                                    required: {
-                                        value: true,
-                                        message: "Status es requerido",
-                                    }
-                                })}
-                                isInvalid={!!errors.Categoria}
-                                errorMessage={errors.Categoria && `${errors.Categoria.message}`}
-                            >
-                                {status.map((data) => (
-                                    <SelectItem key={data.value} value={data.value}>
-                                        {data.label}
-                                    </SelectItem>
-                                ))}
-                            </Select>
-                            <input
-                                placeholder="Image"
-                                type="file"
-                                {...register('imagen', {
-                                    required: 'Imagen es requerida',
-                                    validate: {
-                                        fileSize: (value) => {
-                                            // Validar tamaño máximo del archivo (ejemplo: 2MB)
-                                            return value[0]?.size <= 5000000 || 'La imagen no puede ser mayor a 5MB';
-                                        },
-                                        fileType: (value) => {
-                                            // Validar tipo de archivo (ejemplo: solo imágenes)
-                                            const allowedExtensions = ['jpg', 'jpeg', 'png', 'webp'];
-                                            const extension = value[0]?.name.split('.').pop().toLowerCase();
-                                            return allowedExtensions.includes(extension) || 'Formato de imagen no válido';
-                                        },
-                                    },
-                                })}
-                            />
+                            })}
+                            isInvalid={!!errors.Descripción}
+                            errorMessage={errors.Descripción && `${errors.Descripción.message}`} />
+                        <Input
+                            type="number"
+                            placeholder="Precio"
+                            required
+                            defaultValue={params.id ? newTask.price : ""}
+                            {...register("Precio", {
+                                required: {
+                                    value: true,
+                                    message: "Precio es requerido",
+                                },
+                                pattern: {
+                                    value: /^[0-9]+$/,
+                                    message: "Precio no es valido",
+                                },
+                            })}
+                            isInvalid={!!errors.Precio}
+                            errorMessage={errors.Precio && `${errors.Precio.message}`} />
+                        <Select
+                            label="Categoria"
+                            variant="faded"
+                            placeholder="Categoria"
+                            required
+                            {...register("Categoria", {
+                                required: {
+                                    value: true,
+                                    message: "Categoria es requerido",
+                                }
+                            })}
+                            isInvalid={!!errors.Categoria}
+                            errorMessage={errors.Categoria && `${errors.Categoria.message}`}
+                        >
+                            {category.map((data) => (
+                                <SelectItem key={data.value} value={data.value}>
+                                    {data.label}
+                                </SelectItem>
+                            ))}
+                        </Select>
+                        <Select
+                            label="Estado"
+                            variant="faded"
+                            placeholder="Estado"
+                            required
+                            {...register("Estado", {
+                                required: {
+                                    value: true,
+                                    message: "Estado es requerido",
+                                }
+                            })}
+                            isInvalid={!!errors.Estado}
+                            errorMessage={errors.Estado && `${errors.Estado.message}`}
+                        >
+                            {status.map((data) => (
+                                <SelectItem key={data.value} value={data.value}>
+                                    {data.label}
+                                </SelectItem>
+                            ))}
+                        </Select>
+                        <input placeholder="Image" type="file" onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                            if (e.target.files) {
+                                setFile(e.target.files[0]);
+                            }
+                        }} required />
+                        <p>
                             {errors.imagen && <>{errors.imagen.message}</>}
+                        </p>
 
-                            <Button color="primary" variant="shadow" type="submit" isLoading={isLoading}>
-                                {params.id ? "Actualizar" : "Crear"}
-                            </Button>
-                        </form>
-                    </Suspense>
+                        <Button color="primary" variant="shadow" type="submit" isLoading={isLoading}>
+                            {params.id ? "Actualizar" : "Crear"}
+                        </Button>
+                    </form>
                 </div>
             </div>
             <div className="flex flex-col w-96 h-[600px] gap-16">
@@ -234,7 +233,7 @@ export default function Form() {
                     </CardHeader>
 
                     <CardBody className="flex justify-center items-center max-h-[300px]">
-                        {selectedFile ? <Image src={URL.createObjectURL(selectedFile)} alt="image" width={250} height={300} radius="lg" shadow="md" className="object-cover h-[270px]" /> : <Image src={newTask.image} alt="image" width={250} height={300} radius="lg" shadow="md" className="object-cover h-[270px]" />}
+                        {file ? <Image src={URL.createObjectURL(file)} alt="image" width={250} height={300} radius="lg" shadow="md" className="object-cover h-[270px]" /> : <Image src={newTask.image} alt="image" width={250} height={300} radius="lg" shadow="md" className="object-cover h-[270px]" />}
                     </CardBody>
 
                     <CardFooter className="flex justify-between">
