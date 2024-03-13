@@ -21,7 +21,7 @@ import {
     ChipProps,
     SortDescriptor,
     Tooltip,
-    Spinner
+    Spinner,
 } from "@nextui-org/react";
 import { SearchIcon, ChevronDownIcon, VerticalDotsIcon, PlusIcon, EyeIcon, EditIcon, DeleteIcon } from "@/components/icons";
 import { columns, statusOptions } from "@/components/data";
@@ -156,14 +156,14 @@ export default function App() {
                     <div className="relative flex justify-start items-center gap-2">
                         <div className="relative flex items-center gap-2">
                             <Tooltip content="Detalles">
-                                <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                                <Link href={`/admin/price/item/${user._id}`} className="text-lg text-default-400 cursor-pointer active:opacity-50">
                                     <EyeIcon />
-                                </span>
+                                </Link>
                             </Tooltip>
                             <Tooltip content="Editar">
-                                <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                                <Link href={`/admin/price/item/${user._id}`} className="text-lg text-default-400 cursor-pointer active:opacity-50">
                                     <EditIcon />
-                                </span>
+                                </Link>
                             </Tooltip>
                             <Tooltip color="danger" content="Borrar">
                                 <span className="text-lg text-danger cursor-pointer active:opacity-50">
