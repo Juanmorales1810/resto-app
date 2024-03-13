@@ -1,6 +1,7 @@
-import { connectMongoDB } from "@/libs/mongodb";
-import Menu from "@/models/listprice";
 import { NextResponse, NextRequest } from "next/server";
+import { connectMongoDB } from "@/libs/mongodb";
+import { messages } from "@/utils/messages";
+import Menu from "@/models/listprice";
 
 export async function GET(
     NextRequest: NextRequest,
@@ -8,19 +9,27 @@ export async function GET(
 ) {
     connectMongoDB();
     try {
-        const taskFound = await Menu.findById(params.id);
+        const itemFound = await Menu.findById(params.id);
 
-        if (!taskFound)
+        if (!itemFound)
             return NextResponse.json(
                 {
-                    message: "Task not found",
+                    message: "Item no encontrado",
                 },
                 {
                     status: 404,
                 }
             );
 
-        return NextResponse.json(taskFound);
+        return NextResponse.json(
+            {
+                Item: itemFound,
+                message: messages.success.getItme,
+            },
+            {
+                status: 200,
+            }
+        );
     } catch (error: any) {
         return NextResponse.json(error.message, {
             status: 400,
