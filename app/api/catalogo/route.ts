@@ -1,9 +1,9 @@
 require("dotenv").config();
+import Menu, { IMenuSchema } from "@/models/listprice";
 import { NextResponse, NextRequest } from "next/server";
 import { connectMongoDB } from "@/libs/mongodb";
 import { v2 as cloudinary } from "cloudinary";
 import { messages } from "@/utils/messages";
-import Menu, { IMenuSchema } from "@/models/listprice";
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_NAME,
@@ -28,17 +28,6 @@ export async function POST(NextRequest: NextRequest) {
         const category = data.get("category");
 
         if (!name || !description || !image || !price || !status || !category) {
-            return NextResponse.json(
-                {
-                    message: messages.error.needProps,
-                },
-                {
-                    status: 400,
-                }
-            );
-        }
-
-        if (!image) {
             return NextResponse.json(
                 {
                     message: messages.error.needProps,
