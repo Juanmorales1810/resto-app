@@ -11,6 +11,7 @@ export const messages = {
         tokenNotValid: "Token no valido",
         menuExist: "Ya existe un menu con ese nombre",
         imageNotUploaded: "No se pudo subir la imagen",
+        itemNotExist: "Item no existe",
     },
     success: {
         userCreated: "Usuario creado correctamente",
@@ -21,5 +22,6 @@ export const messages = {
         menuCreated: "Menu creado correctamente",
         getMenu: "Menu obtenido correctamente",
         getItme: "Item obtenido correctamente",
+        itemUpdated: "Item actualizado correctamente",
     },
 };
