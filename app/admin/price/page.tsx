@@ -27,7 +27,9 @@ import { SearchIcon, ChevronDownIcon, VerticalDotsIcon, PlusIcon, EyeIcon, EditI
 import { columns, statusOptions } from "@/components/data";
 import { capitalize } from "@/utils/capitalize";
 import { useAsyncList } from "@react-stately/data";
+import { useAuthFetch } from "@/hooks/useAuthFetch";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
@@ -51,6 +53,8 @@ type Imenu = {
 
 export default function App() {
     const [isLoading, setIsLoading] = React.useState(true);
+    const authFetch = useAuthFetch();
+    const router = useRouter();
 
     let list = useAsyncList({
         async load({ signal }) {
@@ -66,6 +70,8 @@ export default function App() {
         }
     })
     const products = list.items;
+    console.log(products);
+
 
     const [filterValue, setFilterValue] = React.useState("");
     const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set([]));
@@ -124,6 +130,16 @@ export default function App() {
             return sortDescriptor.direction === "descending" ? -cmp : cmp;
         });
     }, [sortDescriptor, items]);
+    const handleDelete = async (userId: string) => {
+        if (window.confirm("Are you sure you want to delete this task?")) {
+            await authFetch({
+                endpoint: `catalogo/${userId}`,
+                method: 'delete'
+            })
+            router.push("/admin/price");
+            router.refresh();
+        }
+    }
 
     const renderCell = React.useCallback((user: Imenu, columnKey: React.Key) => {
         const cellValue = user[columnKey as keyof Imenu];
@@ -166,7 +182,7 @@ export default function App() {
                                 </Link>
                             </Tooltip>
                             <Tooltip color="danger" content="Borrar">
-                                <span className="text-lg text-danger cursor-pointer active:opacity-50">
+                                <span onClick={() => handleDelete(user._id)} className="text-lg text-danger cursor-pointer active:opacity-50">
                                     <DeleteIcon />
                                 </span>
                             </Tooltip>
