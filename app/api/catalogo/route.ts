@@ -37,7 +37,6 @@ export async function POST(NextRequest: NextRequest) {
                 }
             );
         }
-        console.log("llego primer condicional");
 
         if (!image) {
             return NextResponse.json(
@@ -49,7 +48,6 @@ export async function POST(NextRequest: NextRequest) {
                 }
             );
         }
-        console.log("llego segundo condicional");
 
         //@ts-ignore
         const bytes = await image.arrayBuffer();
@@ -85,15 +83,6 @@ export async function POST(NextRequest: NextRequest) {
                 { status: 200 }
             );
         }
-        console.log("llego tercer condicional");
-        console.log("Datos del nuevo menú:", {
-            name,
-            description,
-            image: imageUrl,
-            price,
-            status,
-            category,
-        });
         const newMenu: IMenuSchema = new Menu({
             name,
             description,
