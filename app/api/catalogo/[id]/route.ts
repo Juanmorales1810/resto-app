@@ -45,10 +45,12 @@ export async function GET(
     }
 }
 
-export async function PUT(NextRequest: NextRequest) {
+export async function PUT(
+    NextRequest: NextRequest,
+    { params }: { params: any }
+) {
     try {
         const data = await NextRequest.formData();
-        const id = data.get("id");
         const image = data.get("image");
         const name = data.get("name");
         const description = data.get("description");
@@ -56,15 +58,7 @@ export async function PUT(NextRequest: NextRequest) {
         const status = data.get("status");
         const category = data.get("category");
 
-        if (
-            !id ||
-            !name ||
-            !description ||
-            !image ||
-            !price ||
-            !status ||
-            !category
-        ) {
+        if (!name || !description || !image || !price || !status || !category) {
             return NextResponse.json(
                 {
                     message: messages.error.needProps,
@@ -93,7 +87,7 @@ export async function PUT(NextRequest: NextRequest) {
         const imageUrl = resultImag.secure_url;
 
         const updatedItem: IMenuSchema | null = await Menu.findByIdAndUpdate(
-            id,
+            params.id,
             {
                 name,
                 description,
