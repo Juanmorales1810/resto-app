@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from 'axios'
+import axios, { AxiosRequestConfig, Method } from 'axios'
 import { useRouter } from 'next/navigation'
 
 
@@ -7,6 +7,7 @@ interface AuthFetchProps {
     redirectRoute?: string
     formData: any
     options?: AxiosRequestConfig<any>
+    method?: Method
 }
 
 export function useAuthFetch() {
@@ -16,14 +17,16 @@ export function useAuthFetch() {
         endpoint,
         formData,
         redirectRoute,
-        options
+        options,
+        method = 'post' // default method is post
     }: AuthFetchProps) => {
         try {
-            const { data } = await axios.post(
-                `/api/${endpoint}`,
-                formData,
-                options
-            )
+            const { data } = await axios({
+                url: `/api/${endpoint}`,
+                method,
+                data: formData,
+                ...options
+            })
             console.log(data.message);
 
             if (redirectRoute) router.push(redirectRoute)
