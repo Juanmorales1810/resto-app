@@ -1,7 +1,15 @@
+require("dotenv").config();
+import Menu, { IMenuSchema } from "@/models/listprice";
 import { NextResponse, NextRequest } from "next/server";
 import { connectMongoDB } from "@/libs/mongodb";
+import { v2 as cloudinary } from "cloudinary";
 import { messages } from "@/utils/messages";
-import Menu from "@/models/listprice";
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 export async function GET(
     NextRequest: NextRequest,
@@ -37,33 +45,89 @@ export async function GET(
     }
 }
 
-export async function PUT(
-    NextRequest: NextRequest,
-    { params }: { params: any }
-) {
-    const body = await NextRequest.json();
-    connectMongoDB();
-
+export async function PUT(NextRequest: NextRequest) {
     try {
-        const taskUpdated = await Menu.findByIdAndUpdate(params.id, body, {
-            new: true,
-        });
+        const data = await NextRequest.formData();
+        const id = data.get("id");
+        const image = data.get("image");
+        const name = data.get("name");
+        const description = data.get("description");
+        const price = data.get("price");
+        const status = data.get("status");
+        const category = data.get("category");
 
-        if (!taskUpdated)
+        if (
+            !id ||
+            !name ||
+            !description ||
+            !image ||
+            !price ||
+            !status ||
+            !category
+        ) {
             return NextResponse.json(
                 {
-                    message: "Task not found",
+                    message: messages.error.needProps,
                 },
                 {
-                    status: 404,
+                    status: 400,
                 }
             );
+        }
 
-        return NextResponse.json(taskUpdated);
-    } catch (error: any) {
-        return NextResponse.json(error.message, {
-            status: 400,
+        //@ts-ignore
+        const bytes = await image.arrayBuffer();
+        const buffer = Buffer.from(bytes);
+
+        const resultImag: any = await new Promise((resolve, reject) => {
+            cloudinary.uploader
+                .upload_stream({}, (error, result) => {
+                    if (error) {
+                        reject(error);
+                    }
+                    resolve(result);
+                })
+                .end(buffer);
         });
+
+        const imageUrl = resultImag.secure_url;
+
+        const updatedItem: IMenuSchema | null = await Menu.findByIdAndUpdate(
+            id,
+            {
+                name,
+                description,
+                image: imageUrl,
+                price,
+                status,
+                category,
+            },
+            { new: true }
+        )!;
+
+        if (!updatedItem) {
+            return NextResponse.json(
+                { message: messages.error.itemNotExist },
+                { status: 404 }
+            );
+        }
+
+        console.log("Menú actualizado:", updatedItem);
+        return NextResponse.json(
+            {
+                updatedItem,
+                message: messages.success.itemUpdated,
+            },
+            {
+                status: 200,
+            }
+        );
+    } catch (error: any) {
+        console.error("Error al actualizar el menú:", error);
+        return NextResponse.json(
+            { message: messages.error.default, error },
+            { status: 500 }
+        );
     }
 }
 
