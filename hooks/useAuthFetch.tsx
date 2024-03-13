@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 interface AuthFetchProps {
     endpoint: string
     redirectRoute?: string
-    formData: any
+    formData?: any
     options?: AxiosRequestConfig<any>
     method?: Method
 }
@@ -30,6 +30,7 @@ export function useAuthFetch() {
             console.log(data.message);
 
             if (redirectRoute) router.push(redirectRoute)
+            return data
         } catch (error: any) {
             console.log(error.response.data.message);
         }
