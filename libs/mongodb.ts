@@ -1,6 +1,8 @@
+require("dotenv").config();
+
 import mongoose from "mongoose";
 
-const MONGO_URL = "mongodb://localhost/project";
+const MONGO_URL = process.env.MONGO_URL || "mongodb://localhost/project";
 
 export const connectMongoDB = async () => {
     try {
