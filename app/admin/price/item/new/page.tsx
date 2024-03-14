@@ -1,8 +1,8 @@
 "use client";
 
-import { Input, Select, Textarea, SelectItem, Button, Card, CardHeader, CardBody, CardFooter, Divider, Link, Image, Spinner } from "@nextui-org/react";
-import React, { ChangeEvent, useState, useEffect, Suspense } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { Input, Select, Textarea, SelectItem, Button, Card, CardHeader, CardBody, CardFooter, Image, Spinner } from "@nextui-org/react";
+import React, { ChangeEvent, useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 import { useAuthFetch } from "@/hooks/useAuthFetch";
 import { useLoading } from "@/hooks/useLoading";
 import { useForm } from "react-hook-form";
@@ -48,14 +48,12 @@ export default function Form() {
     //useAuthFetch
     const authFetch = useAuthFetch()
     const params = useParams();
-    const router = useRouter();
     //Obtener datos
     const getTask = async () => {
         const data = await authFetch({
             endpoint: `catalogo/${params.id}`,
             method: 'get'
         })
-        console.log(data.Item);
 
         setNewTask({ name: data.Item.name, description: data.Item.description, price: data.Item.price, category: data.Item.category, status: data.Item.status, image: data.Item.image });
         setDatosCargados(true);
@@ -112,7 +110,7 @@ export default function Form() {
     return (
         <section className="flex flex-col lg:flex-row justify-center items-center w-full h-[calc(100vh-20px)] gap-20">
             <div className="w-96 h-[600px]">
-                <h1 className="text-3xl text-white font-bold ">Nuevo producto</h1>
+                <h1 className="text-3xl text-white font-bold ">{params.id ? "Editar producto" : "Nuevo Producto"}</h1>
                 <div className="flex flex-col justify-center items-center w-full h-full">
                     <form onSubmit={onSubmit} className="flex flex-col gap-4 w-96">
                         <Input
@@ -215,7 +213,7 @@ export default function Form() {
                             {errors.imagen && <>{errors.imagen.message}</>}
                         </p>
 
-                        <Button color="primary" variant="shadow" type="submit" isLoading={isLoading}>
+                        <Button color={params.id ? "warning" : "primary"} variant="shadow" type="submit" isLoading={isLoading}>
                             {params.id ? "Actualizar" : "Crear"}
                         </Button>
                     </form>
