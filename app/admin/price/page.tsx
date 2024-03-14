@@ -23,13 +23,13 @@ import {
     Tooltip,
     Spinner,
 } from "@nextui-org/react";
-import { SearchIcon, ChevronDownIcon, VerticalDotsIcon, PlusIcon, EyeIcon, EditIcon, DeleteIcon } from "@/components/icons";
+import { SearchIcon, ChevronDownIcon, PlusIcon, EyeIcon, EditIcon, DeleteIcon } from "@/components/icons";
 import { columns, statusOptions } from "@/components/data";
-import { capitalize } from "@/utils/capitalize";
-import { useAsyncList } from "@react-stately/data";
 import { useAuthFetch } from "@/hooks/useAuthFetch";
-import Link from "next/link";
+import { useAsyncList } from "@react-stately/data";
+import { capitalize } from "@/utils/capitalize";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
@@ -70,8 +70,17 @@ export default function App() {
         }
     })
     const products = list.items;
-    console.log(products);
 
+    const handleDelete = async (userId: string) => {
+        if (window.confirm("Estas seguro de eliminar este item?")) {
+            await authFetch({
+                endpoint: `catalogo/${userId}`,
+                method: 'delete'
+            })
+            router.push("/admin/price");
+            router.refresh();
+        }
+    }
 
     const [filterValue, setFilterValue] = React.useState("");
     const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set([]));
@@ -108,9 +117,6 @@ export default function App() {
 
         return filteredUsers;
     }, [products, filterValue, statusFilter]);
-    console.log(filteredItems);
-
-
 
     const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
@@ -130,16 +136,7 @@ export default function App() {
             return sortDescriptor.direction === "descending" ? -cmp : cmp;
         });
     }, [sortDescriptor, items]);
-    const handleDelete = async (userId: string) => {
-        if (window.confirm("Are you sure you want to delete this task?")) {
-            await authFetch({
-                endpoint: `catalogo/${userId}`,
-                method: 'delete'
-            })
-            router.push("/admin/price");
-            router.refresh();
-        }
-    }
+
 
     const renderCell = React.useCallback((user: Imenu, columnKey: React.Key) => {
         const cellValue = user[columnKey as keyof Imenu];
@@ -370,8 +367,8 @@ export default function App() {
                     </TableColumn>
                 )}
             </TableHeader>
-            <TableBody emptyContent={isLoading ? "Cargando" : "No users found"} items={sortedItems as Iterable<Imenu>} isLoading={isLoading}
-                loadingContent={<Spinner className="top-20" />}>
+            <TableBody emptyContent={isLoading ? "Cargando..." : "No users found"} items={sortedItems as Iterable<Imenu>} isLoading={isLoading}
+                loadingContent={<Spinner size="lg" className="top-20" />}>
                 {(item: Imenu) => (
                     <TableRow key={item._id} aria-label={`Columna ${item.name}`}>
                         {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
