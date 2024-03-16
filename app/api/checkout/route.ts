@@ -1,8 +1,5 @@
-// import { CreatePreferencePayload } from "mercadopago/models/preferences/create-payload.model";
-import { NextApiRequest, NextApiResponse } from "next";
-
+import { NextResponse, NextRequest } from "next/server";
 import { MercadoPagoConfig, Payment } from "mercadopago";
-import mercadopago from "mercadopago";
 
 const accessToken = process.env.MERCADOPAGO_ACCESS_TOKEN || "";
 const client = new MercadoPagoConfig({ accessToken });
@@ -14,37 +11,45 @@ interface IProduct {
     description: string;
 }
 const payment = new Payment(client);
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-    if (req.method === "POST") {
-        const product: IProduct = req.body.product;
-        const URL = "https://resto-app-five-chi.vercel.app";
-        try {
-            const body = {
-                items: [
-                    {
-                        id: "12",
-                        title: "titulo del producto",
-                        unit_price: 1000,
-                        picture_url:
-                            "https://www.mercadopago.com/org-img/MP3/home/logomp3.gif",
-                        description: "descripcion del producto",
-                        quantity: 1,
-                    },
-                ],
-                auto_return: "approved",
-                back_urls: {
-                    success: `${URL}`,
-                    failure: `${URL}`,
-                },
-                notification_url: `${URL}/api/notify`,
-            };
-            const response = await payment.create({ body });
-            console.log(response);
-            res.status(200);
-        } catch (error) {}
-    } else {
-        res.status(400).json({ message: "Method not allowed" });
-    }
-};
 
-export default handler;
+export async function POST(req: NextRequest, res: NextResponse) {
+    const product: IProduct = await req.json();
+    console.log(product);
+
+    const URL = "https://resto-app-five-chi.vercel.app";
+    try {
+        const body = {
+            items: [
+                {
+                    id: product.id,
+                    title: product.title,
+                    unit_price: product.price,
+                    // picture_url: product.picture_url,
+                    description: product.description,
+                    quantity: 1,
+                },
+            ],
+            auto_return: "approved",
+            back_urls: {
+                success: `${URL}`,
+                failure: `${URL}`,
+            },
+            notification_url: `${URL}/api/notify`,
+        };
+        const response = await payment.create({ body });
+        console.log(response);
+        return NextResponse.json({
+            init_point: response.transaction_details?.external_resource_url,
+            status: 400,
+        });
+    } catch (error) {
+        // Log the error for debugging purposes
+        console.error(error);
+
+        // Send an error response back to the client
+        return NextResponse.json({
+            error: "An error occurred while processing your request.",
+            status: 500,
+        });
+    }
+}
