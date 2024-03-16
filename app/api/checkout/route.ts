@@ -37,9 +37,25 @@ export async function POST(req: NextRequest, res: NextResponse) {
             },
             notification_url: `${URL}/api/notify`,
         };
-        console.log(body);
 
-        const response = await payment.create({ body });
+        const response = await payment.create({
+            body: {
+                additional_info: {
+                    items: [
+                        {
+                            id: product.id,
+                            title: product.title,
+                            unit_price: product.price,
+                            picture_url: product.picture_url,
+                            quantity: 1,
+                        },
+                    ],
+                },
+                description: product.description,
+                transaction_amount: product.price,
+                payment_method_id: "visa",
+            },
+        });
         console.log(response);
         return NextResponse.json({
             init_point: response,
