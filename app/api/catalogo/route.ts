@@ -15,15 +15,7 @@ export async function GET() {
     await connectMongoDB();
     try {
         const menuFound = await Menu.find();
-        return NextResponse.json(
-            {
-                Menu: menuFound,
-                message: messages.success.getMenu,
-            },
-            {
-                status: 200,
-            }
-        );
+        return NextResponse.json(menuFound);
     } catch (error: any) {
         return NextResponse.json(
             {

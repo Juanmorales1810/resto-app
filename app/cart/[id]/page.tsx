@@ -12,7 +12,7 @@ export default function TableMenu({ params }: { params: BlogParams }) {
     const [isLoading, setIsLoading] = useState(true);
     let list = useAsyncList({
         async load({ signal }) {
-            let res = await fetch('http://localhost:3000/api/catalogo', {
+            let res = await fetch('https://resto-app-five-chi.vercel.app/catalogo', {
                 signal,
             });
             let json = await res.json();

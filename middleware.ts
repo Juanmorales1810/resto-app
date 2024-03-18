@@ -9,11 +9,14 @@ export async function middleware(request: NextRequest) {
             return NextResponse.redirect(new URL("/guard", request.url));
         }
 
-        const res = await fetch("http://localhost:3000/api/auth/check", {
-            headers: {
-                token: token.value,
-            },
-        });
+        const res = await fetch(
+            "https://resto-app-five-chi.vercel.app/api/auth/check",
+            {
+                headers: {
+                    token: token.value,
+                },
+            }
+        );
 
         const data = await res.json();
 
