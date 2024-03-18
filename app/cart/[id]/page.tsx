@@ -17,8 +17,8 @@ interface Product {
     image: string;
 
 }
-const authFetch = useAuthFetch()
 export default function TableMenu({ params }: { params: BlogParams }) {
+    const authFetch = useAuthFetch()
     const { finishLoading, isLoading, startLoading } = useLoading()
     const [menu, setMenu] = useState([]);
     const tableNum = [
@@ -35,6 +35,18 @@ export default function TableMenu({ params }: { params: BlogParams }) {
             qr: "https://www.qr-code-generator.com/",
         }
     ]
+    useEffect(() => {
+        getTask();
+    }, []);
+    const getTask = async () => {
+        startLoading()
+        const data = await authFetch({
+            endpoint: `catalogo/`,
+            method: 'get'
+        })
+        setMenu(data.Menu);
+        finishLoading()
+    }
     const foundBlog = tableNum.find((mesa) => mesa.mesa === params.id);
     if (!foundBlog) {
         return (
@@ -59,19 +71,6 @@ export default function TableMenu({ params }: { params: BlogParams }) {
             </section>
         );
     }
-    const getTask = async () => {
-        startLoading()
-        const data = await authFetch({
-            endpoint: `catalogo/`,
-            method: 'get'
-        })
-        setMenu(data.Menu);
-        finishLoading()
-    }
-
-    useEffect(() => {
-        getTask();
-    }, []);
 
     return (
         <section className="flex flex-wrap justify-center items-center gap-4">
