@@ -19,6 +19,7 @@ interface Product {
 
 }
 export default function TableMenu({ params }: { params: BlogParams }) {
+    const authFetch = useAuthFetch()
     const { finishLoading, isLoading, startLoading } = useLoading()
     const [menu, setMenu] = useState([]);
     const tableNum = [
@@ -59,7 +60,6 @@ export default function TableMenu({ params }: { params: BlogParams }) {
             </section>
         );
     }
-    const authFetch = useAuthFetch()
     const getTask = async () => {
         startLoading()
         const data = await authFetch({
