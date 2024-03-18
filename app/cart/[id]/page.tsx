@@ -9,8 +9,24 @@ interface BlogParams {
     id: string;
 }
 export default function TableMenu({ params }: { params: BlogParams }) {
-
     const [isLoading, setIsLoading] = useState(true);
+    let list = useAsyncList({
+        async load({ signal }) {
+            let res = await fetch('http://localhost:3000/api/catalogo', {
+                signal,
+            });
+            let json = await res.json();
+            console.log(json);
+
+
+            setIsLoading(false);
+            return {
+                items: json,
+            };
+        }
+    })
+    const products = list.items;
+
     const tableNum = [
         {
             mesa: "1",
@@ -49,22 +65,7 @@ export default function TableMenu({ params }: { params: BlogParams }) {
             </section>
         );
     }
-    let list = useAsyncList({
-        async load({ signal }) {
-            let res = await fetch('http://localhost:3000/api/catalogo', {
-                signal,
-            });
-            let json = await res.json();
-            console.log(json);
 
-
-            setIsLoading(false);
-            return {
-                items: json,
-            };
-        }
-    })
-    const products = list.items;
 
     return (
         <section className="flex flex-wrap justify-center items-center gap-4">
