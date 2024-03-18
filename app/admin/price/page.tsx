@@ -1,5 +1,6 @@
 "use client";
 
+require('events').EventEmitter.defaultMaxListeners = 20;
 import React from "react";
 import {
     Table,
@@ -58,14 +59,16 @@ export default function App() {
 
     let list = useAsyncList({
         async load({ signal }) {
-            let res = await fetch('https://resto-app-five-chi.vercel.app/api/catalogo', {
+            let res = await fetch('http://localhost:3000/api/catalogo', {
                 signal,
             });
             let json = await res.json();
+            console.log(json);
+
 
             setIsLoading(false);
             return {
-                items: json,
+                items: json.menu,
             };
         }
     })
