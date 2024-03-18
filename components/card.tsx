@@ -54,7 +54,7 @@ const CardSpotlight = () => {
                 }}
             />
             <div className='w-1/2 h-full'>
-                <Image src='/local.jpg' isBlurred />
+                <Image src='/local.jpg' alt='Lo del pibe local' isBlurred />
             </div>
             <div className="flex flex-col justify-center items-center w-1/2 h-[360px] px-8 py-16 bg-[url('/map.webp')] bg-cover bg-center">
                 <h1 className='text-3xl font-bold text-white'>Visitanos en nuestro local!</h1>

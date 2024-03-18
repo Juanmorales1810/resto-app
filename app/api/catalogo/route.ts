@@ -12,17 +12,29 @@ cloudinary.config({
 });
 
 export async function GET() {
-    await connectMongoDB();
-    const menu = await Menu.find();
-    return NextResponse.json(
-        {
-            menu,
-            message: messages.success.getItme,
-        },
-        {
-            status: 200,
-        }
-    );
+    try {
+        await connectMongoDB();
+        console.log("Conexión a la base de datos realizada correctamente");
+
+        const menu = await Menu.find();
+        console.log("Resultado de la consulta:", menu);
+
+        return NextResponse.json(
+            {
+                menu,
+                message: messages.success.getItme,
+            },
+            {
+                status: 200,
+            }
+        );
+    } catch (error: any) {
+        console.error("Error al obtener el menú:", error);
+        return NextResponse.json(
+            { message: messages.error.default, error },
+            { status: 500 }
+        );
+    }
 }
 
 export async function POST(NextRequest: NextRequest) {

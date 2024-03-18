@@ -15,7 +15,6 @@ interface ProductItem {
 }
 export default function Product(props: ProductProps) {
     const { products } = props;
-    console.log(products);
 
     return (
         <div className="flex flex-wrap justify-center items-center gap-4">
