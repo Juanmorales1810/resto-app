@@ -7,7 +7,7 @@ import Menu from "@/models/listprice";
 interface BlogParams {
     id: string;
 }
-export async function loadMenu() {
+async function loadMenu() {
     await connectMongoDB();
     const ListProduct = await Menu.find();
     return ListProduct.map(product => {
@@ -17,11 +17,7 @@ export async function loadMenu() {
     }); // Usa .toObject() para convertir cada producto a un objeto JavaScript simple
 }
 export default async function TableMenu({ params }: { params: BlogParams }) {
-    // const [isLoading, setIsLoading] = useState(true);
-
     const menu = await loadMenu();
-
-
     const tableNum = [
         {
             mesa: "1",
