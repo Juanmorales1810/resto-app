@@ -3,7 +3,7 @@
 import CardItem from "./cardItem";
 
 interface ProductProps {
-    products: any[];
+    products: ProductItem[];
 }
 interface ProductItem {
     _id: string;

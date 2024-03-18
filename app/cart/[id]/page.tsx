@@ -2,13 +2,14 @@ import { connectMongoDB } from "@/libs/mongodb";
 import Product from "@/components/productos";
 import { Image } from "@nextui-org/react";
 import Menu from "@/models/listprice";
-import { Suspense } from "react";
+import { Suspense, cache } from "react";
+import Loading from "./loading";
 
 
 interface BlogParams {
     id: string;
 }
-async function loadMenu() {
+const getItems = cache(async function loadMenu() {
     await connectMongoDB();
     const ListProduct = await Menu.find();
     return ListProduct.map(product => {
@@ -16,9 +17,9 @@ async function loadMenu() {
         obj._id = obj._id.toString(); // Convierte _id a una cadena
         return obj;
     }); // Usa .toObject() para convertir cada producto a un objeto JavaScript simple
-}
+})
 export default async function TableMenu({ params }: { params: BlogParams }) {
-    const menu = await loadMenu();
+    const menu = await getItems();
     const tableNum = [
         {
             mesa: "1",
@@ -61,7 +62,7 @@ export default async function TableMenu({ params }: { params: BlogParams }) {
 
     return (
         <section className="flex flex-wrap justify-center items-center">
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<Loading />}>
                 <Product products={menu} />
             </Suspense>
         </section>
