@@ -48,15 +48,6 @@ export default function TableMenu({ params }: { params: BlogParams }) {
 
         getTask();
     }, []);
-    // const getTask = async () => {
-    //     startLoading()
-    //     const data = await authFetch({
-    //         endpoint: `catalogo/`,
-    //         method: 'get'
-    //     })
-    //     setMenu(data.Menu);
-    //     finishLoading()
-    // }
     const foundBlog = tableNum.find((mesa) => mesa.mesa === params.id);
     if (!foundBlog) {
         return (
@@ -84,7 +75,10 @@ export default function TableMenu({ params }: { params: BlogParams }) {
 
     return (
         <section className="flex flex-wrap justify-center items-center gap-4">
-            {isLoading ? <Spinner label="Cargando..." size="lg" /> : menu.map((product: Product, key: number) => <CardItem key={product._id} title={product.name} description={product.description} image={product.image} price={product.price} />)}
+            {isLoading ? <Spinner label="Cargando..." size="lg" /> : menu.map((product: Product, key: number) => {
+                console.log(product); // Verifica cada producto en la consola
+                return <CardItem key={product._id} title={product.name} description={product.description} image={product.image} price={product.price} />
+            })}
         </section>
     );
 }
