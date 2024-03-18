@@ -1,12 +1,27 @@
-import mongoose from "mongoose";
+import mongoose, { connect, connection } from "mongoose";
 
-const MONGODB_URI = `${process.env.MONGODB_URI}`;
-
-export const connectMongoDB = async () => {
-    try {
-        await mongoose.connect(MONGODB_URI);
-        console.log("Connected to MongoDB.");
-    } catch (error) {
-        console.log(error);
-    }
+const conn = {
+    isConnected: false,
 };
+
+// export const connectMongoDB = async () => {
+//     try {
+//         await mongoose.connect(`${process.env.MONGODB_URI}`);
+//         console.log("Connected to MongoDB.");
+//     } catch (error) {
+//         console.log(error);
+//     }
+// };
+export async function connectMongoDB() {
+    if (conn.isConnected) {
+        return;
+    }
+
+    const db = await connect(process.env.MONGODB_URI as string);
+    // console.log(db.connection.db.databaseName);
+    conn.isConnected = db.connections[0].readyState === 1; // Fix: Use boolean value
+}
+
+connection.on("connected", () => console.log("Connected to MongoDB."));
+
+connection.on("error", (err) => console.error("Mongodb Errro:", err.message));
