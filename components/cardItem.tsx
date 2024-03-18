@@ -1,7 +1,7 @@
 import { Button, Card, CardFooter, CardHeader, Image } from "@nextui-org/react";
+import { useLoading } from "@/hooks/useLoading";
 import { useRouter } from 'next/navigation'
 import axios from "axios";
-import { useLoading } from "@/hooks/useLoading";
 
 interface CardItemProps {
     id?: string;
