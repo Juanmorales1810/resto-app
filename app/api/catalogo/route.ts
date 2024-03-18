@@ -13,8 +13,27 @@ cloudinary.config({
 
 export async function GET() {
     await connectMongoDB();
-    const menu = await Menu.find();
-    return NextResponse.json(menu);
+    try {
+        const menuFound = await Menu.find();
+        return NextResponse.json(
+            {
+                Menu: menuFound,
+                message: messages.success.getMenu,
+            },
+            {
+                status: 200,
+            }
+        );
+    } catch (error: any) {
+        return NextResponse.json(
+            {
+                message: messages.error.default,
+            },
+            {
+                status: 400,
+            }
+        );
+    }
 }
 
 export async function POST(NextRequest: NextRequest) {

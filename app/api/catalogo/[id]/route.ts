@@ -39,9 +39,14 @@ export async function GET(
             }
         );
     } catch (error: any) {
-        return NextResponse.json(error.message, {
-            status: 400,
-        });
+        return NextResponse.json(
+            {
+                message: messages.error.default,
+            },
+            {
+                status: 400,
+            }
+        );
     }
 }
 
@@ -146,8 +151,13 @@ export async function DELETE(
 
         return NextResponse.json(taskDeleted);
     } catch (error: any) {
-        return NextResponse.json(error.message, {
-            status: 400,
-        });
+        return NextResponse.json(
+            {
+                message: messages.error.default,
+            },
+            {
+                status: 400,
+            }
+        );
     }
 }
