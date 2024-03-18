@@ -35,9 +35,6 @@ export default function TableMenu({ params }: { params: BlogParams }) {
             qr: "https://www.qr-code-generator.com/",
         }
     ]
-    useEffect(() => {
-        getTask();
-    }, []);
     const getTask = async () => {
         startLoading()
         const data = await authFetch({
@@ -47,6 +44,10 @@ export default function TableMenu({ params }: { params: BlogParams }) {
         setMenu(data.Menu);
         finishLoading()
     }
+    useEffect(() => {
+        getTask();
+    }, [getTask]);
+
     const foundBlog = tableNum.find((mesa) => mesa.mesa === params.id);
     if (!foundBlog) {
         return (
