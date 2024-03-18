@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import {
     Table,
     TableHeader,
@@ -24,9 +23,10 @@ import {
     Spinner,
 } from "@nextui-org/react";
 import { SearchIcon, ChevronDownIcon, PlusIcon, EyeIcon, EditIcon, DeleteIcon } from "@/components/icons";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { columns, statusOptions } from "@/components/data";
 import { useAuthFetch } from "@/hooks/useAuthFetch";
-import { useAsyncList } from "@react-stately/data";
+import { useLoading } from "@/hooks/useLoading";
 import { capitalize } from "@/utils/capitalize";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -52,56 +52,57 @@ type Imenu = {
 
 
 export default function App() {
-    const [isLoading, setIsLoading] = React.useState(true);
+    const { finishLoading, isLoading, startLoading } = useLoading()
+    const [menu, setMenu] = useState([]);
     const authFetch = useAuthFetch();
     const router = useRouter();
 
-    let list = useAsyncList({
-        async load({ signal }) {
-            let res = await fetch('http://localhost:3000/api/catalogo', {
-                signal,
-            });
-            let json = await res.json();
+    const getTask = async () => {
+        startLoading()
+        const data = await authFetch({
+            endpoint: `catalogo/`,
+            method: 'get'
+        })
+        setMenu(data.Menu);
+        finishLoading()
+    }
 
-            setIsLoading(false);
-            return {
-                items: json,
-            };
-        }
-    })
-    const products = list.items;
+    useEffect(() => {
+        getTask();
+    }, []);
+    const products = menu;
 
     const handleDelete = async (userId: string) => {
         if (window.confirm("Estas seguro de eliminar este item?")) {
             await authFetch({
                 endpoint: `catalogo/${userId}`,
-                method: 'delete'
+                method: 'delete',
+                redirectRoute: '/admin/price'
             })
-            router.push("/admin/price");
             router.refresh();
         }
     }
 
-    const [filterValue, setFilterValue] = React.useState("");
-    const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set([]));
-    const [visibleColumns, setVisibleColumns] = React.useState<Selection>(new Set(INITIAL_VISIBLE_COLUMNS));
-    const [statusFilter, setStatusFilter] = React.useState<Selection>("all");
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
-    const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
+    const [filterValue, setFilterValue] = useState("");
+    const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set([]));
+    const [visibleColumns, setVisibleColumns] = useState<Selection>(new Set(INITIAL_VISIBLE_COLUMNS));
+    const [statusFilter, setStatusFilter] = useState<Selection>("all");
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
         column: "age",
         direction: "ascending",
     });
-    const [page, setPage] = React.useState(1);
+    const [page, setPage] = useState(1);
 
     const hasSearchFilter = Boolean(filterValue);
 
-    const headerColumns = React.useMemo(() => {
+    const headerColumns = useMemo(() => {
         if (visibleColumns === "all") return columns;
 
         return columns.filter((column) => Array.from(visibleColumns).includes(column.uid));
     }, [visibleColumns]);
 
-    const filteredItems = React.useMemo(() => {
+    const filteredItems = useMemo(() => {
         let filteredUsers = [...products];
 
         if (hasSearchFilter) {
@@ -120,14 +121,14 @@ export default function App() {
 
     const pages = Math.ceil(filteredItems.length / rowsPerPage);
 
-    const items = React.useMemo(() => {
+    const items = useMemo(() => {
         const start = (page - 1) * rowsPerPage;
         const end = start + rowsPerPage;
 
         return filteredItems.slice(start, end);
     }, [page, filteredItems, rowsPerPage]);
 
-    const sortedItems = React.useMemo(() => {
+    const sortedItems = useMemo(() => {
         return [...items].sort((a: any, b: any) => {
             const first = a[sortDescriptor.column as keyof Imenu] as number;
             const second = b[sortDescriptor.column as keyof Imenu] as number;
@@ -138,7 +139,7 @@ export default function App() {
     }, [sortDescriptor, items]);
 
 
-    const renderCell = React.useCallback((user: Imenu, columnKey: React.Key) => {
+    const renderCell = useCallback((user: Imenu, columnKey: React.Key) => {
         const cellValue = user[columnKey as keyof Imenu];
 
         switch (columnKey) {
@@ -191,24 +192,24 @@ export default function App() {
         }
     }, []);
 
-    const onNextPage = React.useCallback(() => {
+    const onNextPage = useCallback(() => {
         if (page < pages) {
             setPage(page + 1);
         }
     }, [page, pages]);
 
-    const onPreviousPage = React.useCallback(() => {
+    const onPreviousPage = useCallback(() => {
         if (page > 1) {
             setPage(page - 1);
         }
     }, [page]);
 
-    const onRowsPerPageChange = React.useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    const onRowsPerPageChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
         setRowsPerPage(Number(e.target.value));
         setPage(1);
     }, []);
 
-    const onSearchChange = React.useCallback((value?: string) => {
+    const onSearchChange = useCallback((value?: string) => {
         if (value) {
             setFilterValue(value);
             setPage(1);
@@ -217,12 +218,12 @@ export default function App() {
         }
     }, []);
 
-    const onClear = React.useCallback(() => {
+    const onClear = useCallback(() => {
         setFilterValue("")
         setPage(1)
     }, [])
 
-    const topContent = React.useMemo(() => {
+    const topContent = useMemo(() => {
         return (
             <div className="flex flex-col gap-4">
                 <div className="flex justify-between gap-3 items-end">
@@ -309,7 +310,7 @@ export default function App() {
         hasSearchFilter,
     ]);
 
-    const bottomContent = React.useMemo(() => {
+    const bottomContent = useMemo(() => {
         return (
             <div className="py-2 px-2 flex justify-between items-center">
                 <span className="w-[30%] text-small text-default-400">
