@@ -1,31 +1,26 @@
-"use client";
+import { connectMongoDB } from "@/libs/mongodb";
+import Product from "@/components/productos";
+import { Image } from "@nextui-org/react";
+import Menu from "@/models/listprice";
 
-import { useAsyncList } from "@react-stately/data";
-import CardItem from "@/components/cardItem";
-import { Image, Spinner } from "@nextui-org/react";
-import { useState } from "react";
 
 interface BlogParams {
     id: string;
 }
-export default function TableMenu({ params }: { params: BlogParams }) {
-    const [isLoading, setIsLoading] = useState(true);
-    let list = useAsyncList({
-        async load({ signal }) {
-            let res = await fetch('https://resto-app-five-chi.vercel.app/catalogo', {
-                signal,
-            });
-            let json = await res.json();
-            console.log(json);
+export async function loadMenu() {
+    await connectMongoDB();
+    const ListProduct = await Menu.find();
+    return ListProduct.map(product => {
+        const obj = product.toObject();
+        obj._id = obj._id.toString(); // Convierte _id a una cadena
+        return obj;
+    }); // Usa .toObject() para convertir cada producto a un objeto JavaScript simple
+}
+export default async function TableMenu({ params }: { params: BlogParams }) {
+    // const [isLoading, setIsLoading] = useState(true);
 
+    const menu = await loadMenu();
 
-            setIsLoading(false);
-            return {
-                items: json,
-            };
-        }
-    })
-    const products = list.items;
 
     const tableNum = [
         {
@@ -68,10 +63,8 @@ export default function TableMenu({ params }: { params: BlogParams }) {
 
 
     return (
-        <section className="flex flex-wrap justify-center items-center gap-4">
-            {isLoading ? <Spinner label="Cargando..." size="lg" /> : products.map((product: any, key: number) => {
-                return <CardItem key={product._id} title={product.name} description={product.description} image={product.image} price={product.price} />;
-            })}
+        <section className="flex flex-wrap justify-center items-center">
+            <Product products={menu} />
         </section>
     );
 }
