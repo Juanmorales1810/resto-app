@@ -1,26 +1,16 @@
 "use client";
 
+import { useAsyncList } from "@react-stately/data";
 import CardItem from "@/components/cardItem";
 import { Image, Spinner } from "@nextui-org/react";
-import { useEffect, useState } from "react";
-import { useAuthFetch } from "@/hooks/useAuthFetch";
-import { useLoading } from "@/hooks/useLoading";
+import { useState } from "react";
 
 interface BlogParams {
     id: string;
 }
-interface Product {
-    _id: string;
-    name: string;
-    description: string;
-    price: number;
-    image: string;
-
-}
 export default function TableMenu({ params }: { params: BlogParams }) {
-    const authFetch = useAuthFetch()
-    const { finishLoading, isLoading, startLoading } = useLoading()
-    const [menu, setMenu] = useState([]);
+
+    const [isLoading, setIsLoading] = useState(true);
     const tableNum = [
         {
             mesa: "1",
@@ -35,18 +25,6 @@ export default function TableMenu({ params }: { params: BlogParams }) {
             qr: "https://www.qr-code-generator.com/",
         }
     ]
-    useEffect(() => {
-        getTask();
-    }, []);
-    const getTask = async () => {
-        startLoading()
-        const data = await authFetch({
-            endpoint: `catalogo/`,
-            method: 'get'
-        })
-        setMenu(data.Menu);
-        finishLoading()
-    }
     const foundBlog = tableNum.find((mesa) => mesa.mesa === params.id);
     if (!foundBlog) {
         return (
@@ -71,10 +49,28 @@ export default function TableMenu({ params }: { params: BlogParams }) {
             </section>
         );
     }
+    let list = useAsyncList({
+        async load({ signal }) {
+            let res = await fetch('http://localhost:3000/api/catalogo', {
+                signal,
+            });
+            let json = await res.json();
+            console.log(json);
+
+
+            setIsLoading(false);
+            return {
+                items: json,
+            };
+        }
+    })
+    const products = list.items;
 
     return (
         <section className="flex flex-wrap justify-center items-center gap-4">
-            {isLoading ? <Spinner label="Cargando..." size="lg" /> : menu.map((product: Product, key: number) => <CardItem key={product._id} title={product.name} description={product.description} image={product.image} price={product.price} />)}
+            {isLoading ? <Spinner label="Cargando..." size="lg" /> : products.map((product: any, key: number) => {
+                return <CardItem key={product._id} title={product.name} description={product.description} image={product.image} price={product.price} />;
+            })}
         </section>
     );
 }
