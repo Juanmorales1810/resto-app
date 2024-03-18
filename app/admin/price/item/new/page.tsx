@@ -1,17 +1,18 @@
 "use client";
 
-import { Input, Select, Textarea, SelectItem, Button, Card, CardHeader, CardBody, CardFooter, Image, Spinner } from "@nextui-org/react";
+import { Input, Select, Textarea, SelectItem, Button, Spinner } from "@nextui-org/react";
 import React, { ChangeEvent, useState, useEffect } from "react";
-import { useParams } from "next/navigation";
 import { useAuthFetch } from "@/hooks/useAuthFetch";
 import { useLoading } from "@/hooks/useLoading";
+import CardItem from "@/components/cardItem";
+import { useParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 
 export default function Form() {
     const [file, setFile] = useState<File | null>(null)
     const [datosCargados, setDatosCargados] = useState(false);
-    const [newTask, setNewTask] = useState({
+    const [getItem, setGetItem] = useState({
         name: "",
         description: "",
         price: "",
@@ -55,7 +56,7 @@ export default function Form() {
             method: 'get'
         })
 
-        setNewTask({ name: data.Item.name, description: data.Item.description, price: data.Item.price, category: data.Item.category, status: data.Item.status, image: data.Item.image });
+        setGetItem({ name: data.Item.name, description: data.Item.description, price: data.Item.price, category: data.Item.category, status: data.Item.status, image: data.Item.image });
         setDatosCargados(true);
     }
     useEffect(() => {
@@ -116,7 +117,7 @@ export default function Form() {
                         <Input
                             type="text"
                             placeholder="Nombre"
-                            defaultValue={params.id ? newTask.name : ""}
+                            defaultValue={params.id ? getItem.name : ""}
                             required {...register("Nombre", {
                                 required: {
                                     value: true,
@@ -133,7 +134,7 @@ export default function Form() {
                         <Textarea
                             placeholder="Descripción"
                             required
-                            defaultValue={params.id ? newTask.description : ""}
+                            defaultValue={params.id ? getItem.description : ""}
                             {...register("Descripción", {
                                 required: {
                                     value: true,
@@ -151,7 +152,7 @@ export default function Form() {
                             type="number"
                             placeholder="Precio"
                             required
-                            defaultValue={params.id ? newTask.price : ""}
+                            defaultValue={params.id ? getItem.price : ""}
                             {...register("Precio", {
                                 required: {
                                     value: true,
@@ -204,7 +205,7 @@ export default function Form() {
                                 </SelectItem>
                             ))}
                         </Select>
-                        <input placeholder="Image" type="file" onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                        <input className="block w-full text-white file:py-2 file:px-4 file:font-light file:rounded-lg file:bg-zinc-800 file:border-2 file:border-solid file:border-zinc-700" placeholder="Image" type="file" onChange={(e: ChangeEvent<HTMLInputElement>) => {
                             if (e.target.files) {
                                 setFile(e.target.files[0]);
                             }
@@ -221,24 +222,8 @@ export default function Form() {
             </div>
             <div className="flex flex-col w-96 h-[600px] gap-16">
                 <h1 className="text-3xl text-white font-bold ">Vista previa</h1>
-                <Card className="max-w-[250px]">
-                    <CardHeader className="flex gap-3">
 
-                        <div className="flex flex-col">
-                            <p className="text-md">{watch("Nombre")}</p>
-                            {/* <p className="text-small text-default-500">{watch("Descripción")}</p> */}
-                        </div>
-                    </CardHeader>
-
-                    <CardBody className="flex justify-center items-center max-h-[300px]">
-                        {file ? <Image src={URL.createObjectURL(file)} alt="image" width={250} height={300} radius="lg" shadow="md" className="object-cover h-[270px]" /> : <Image src={newTask.image} alt="image" width={250} height={300} radius="lg" shadow="md" className="object-cover h-[270px]" />}
-                    </CardBody>
-
-                    <CardFooter className="flex justify-between">
-                        <p className="text-lg font-bold">${watch("Precio")}</p>
-                        <Button>Comprar</Button>
-                    </CardFooter>
-                </Card>
+                <CardItem title={watch("Nombre")} description={watch("Descripción")} image={file ? URL.createObjectURL(file) : getItem.image} price={watch("Precio")} />
             </div>
 
         </section>
