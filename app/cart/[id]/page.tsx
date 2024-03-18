@@ -1,6 +1,5 @@
 "use client";
 
-import { useAsyncList } from "@react-stately/data";
 import CardItem from "@/components/cardItem";
 import { Image, Spinner } from "@nextui-org/react";
 import { useEffect, useState } from "react";
@@ -18,8 +17,8 @@ interface Product {
     image: string;
 
 }
+const authFetch = useAuthFetch()
 export default function TableMenu({ params }: { params: BlogParams }) {
-    const authFetch = useAuthFetch()
     const { finishLoading, isLoading, startLoading } = useLoading()
     const [menu, setMenu] = useState([]);
     const tableNum = [

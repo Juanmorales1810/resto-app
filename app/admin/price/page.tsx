@@ -50,11 +50,11 @@ type Imenu = {
     category: string;
 };
 
+const authFetch = useAuthFetch();
 
 export default function App() {
     const { finishLoading, isLoading, startLoading } = useLoading()
     const [menu, setMenu] = useState([]);
-    const authFetch = useAuthFetch();
     const router = useRouter();
 
     const getTask = async () => {
