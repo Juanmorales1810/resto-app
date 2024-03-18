@@ -3,14 +3,24 @@
 import { useAsyncList } from "@react-stately/data";
 import CardItem from "@/components/cardItem";
 import { Image, Spinner } from "@nextui-org/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAuthFetch } from "@/hooks/useAuthFetch";
+import { useLoading } from "@/hooks/useLoading";
 
 interface BlogParams {
     id: string;
 }
-export default function TableMenu({ params }: { params: BlogParams }) {
+interface Product {
+    _id: string;
+    name: string;
+    description: string;
+    price: number;
+    image: string;
 
-    const [isLoading, setIsLoading] = useState(true);
+}
+export default function TableMenu({ params }: { params: BlogParams }) {
+    const { finishLoading, isLoading, startLoading } = useLoading()
+    const [menu, setMenu] = useState([]);
     const tableNum = [
         {
             mesa: "1",
@@ -49,27 +59,24 @@ export default function TableMenu({ params }: { params: BlogParams }) {
             </section>
         );
     }
-    let list = useAsyncList({
-        async load({ signal }) {
-            let res = await fetch('http://localhost:3000/api/catalogo', {
-                signal,
-            });
-            let json = await res.json();
+    const authFetch = useAuthFetch()
+    const getTask = async () => {
+        startLoading()
+        const data = await authFetch({
+            endpoint: `catalogo/`,
+            method: 'get'
+        })
+        setMenu(data.Menu);
+        finishLoading()
+    }
 
-            setIsLoading(false);
-            return {
-                items: json,
-            };
-        }
-    })
-    const products = list.items;
-
+    useEffect(() => {
+        getTask();
+    }, []);
 
     return (
         <section className="flex flex-wrap justify-center items-center gap-4">
-            {isLoading ? <Spinner label="Cargando..." size="lg"></Spinner> : products.map((product: any, key) => {
-                return <CardItem key={product._id} title={product.name} description={product.description} image={product.image} price={product.price} />
-            })}
+            {isLoading ? <Spinner label="Cargando..." size="lg" /> : menu.map((product: Product, key: number) => <CardItem key={product._id} title={product.name} description={product.description} image={product.image} price={product.price} />)}
         </section>
     );
 }
