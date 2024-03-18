@@ -1,14 +1,16 @@
 "use client";
 
+import { useAsyncList } from "@react-stately/data";
 import CardItem from "@/components/cardItem";
-import { Image } from "@nextui-org/react";
-import { User } from "@nextui-org/user";
-import { Link } from "@nextui-org/link";
+import { Image, Spinner } from "@nextui-org/react";
+import { useState } from "react";
+
 interface BlogParams {
     id: string;
 }
-
 export default function TableMenu({ params }: { params: BlogParams }) {
+
+    const [isLoading, setIsLoading] = useState(true);
     const tableNum = [
         {
             mesa: "1",
@@ -23,7 +25,6 @@ export default function TableMenu({ params }: { params: BlogParams }) {
             qr: "https://www.qr-code-generator.com/",
         }
     ]
-
     const foundBlog = tableNum.find((mesa) => mesa.mesa === params.id);
     if (!foundBlog) {
         return (
@@ -48,10 +49,27 @@ export default function TableMenu({ params }: { params: BlogParams }) {
             </section>
         );
     }
+    let list = useAsyncList({
+        async load({ signal }) {
+            let res = await fetch('http://localhost:3000/api/catalogo', {
+                signal,
+            });
+            let json = await res.json();
+
+            setIsLoading(false);
+            return {
+                items: json,
+            };
+        }
+    })
+    const products = list.items;
+
 
     return (
-        <section className="">
-            <CardItem title="Pureba de titulo" description="Esto tiene que ser un poco mas largo" image="/cart/bebida-fresca-lima-verde.jpg" price={2000} />
+        <section className="flex flex-wrap justify-center items-center gap-4">
+            {isLoading ? <Spinner label="Cargando..." size="lg"></Spinner> : products.map((product: any, key) => {
+                return <CardItem key={product._id} title={product.name} description={product.description} image={product.image} price={product.price} />
+            })}
         </section>
     );
 }
