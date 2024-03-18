@@ -59,7 +59,7 @@ export default function App() {
 
     let list = useAsyncList({
         async load({ signal }) {
-            let res = await fetch('http://localhost:3000/api/catalogo', {
+            let res = await fetch('https://resto-app-five-chi.vercel.app/api/catalogo', {
                 signal,
             });
             let json = await res.json();
