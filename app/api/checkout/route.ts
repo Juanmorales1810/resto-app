@@ -1,11 +1,10 @@
 import { NextResponse, NextRequest } from "next/server";
-import { MercadoPagoConfig, Payment } from "mercadopago";
+import { MercadoPagoConfig, Preference } from "mercadopago";
 
-const accessToken =
-    "TEST-4884178194792319-031400-4494535ad519a5353d8ed5943551534e-140083573";
+const accessToken = `${process.env.MERCADO_PAGO_ACCESS_TOKEN}`;
 
 const client = new MercadoPagoConfig({ accessToken });
-const payment = new Payment(client);
+const payment = new Preference(client);
 
 interface IProduct {
     id: string;
@@ -19,47 +18,30 @@ export async function POST(req: NextRequest, res: NextResponse) {
     const product: IProduct = await req.json();
     const URL = "https://resto-app-five-chi.vercel.app";
     try {
-        const body = {
-            items: [
-                {
-                    id: product.id,
-                    title: product.title,
-                    unit_price: product.price,
-                    // picture_url: product.picture_url,
-                    description: product.description,
-                    quantity: 1,
-                },
-            ],
-            auto_return: "approved",
-            back_urls: {
-                success: `${URL}`,
-                failure: `${URL}`,
-            },
-            notification_url: `${URL}/api/notify`,
-        };
-
         const response = await payment.create({
             body: {
-                additional_info: {
-                    items: [
-                        {
-                            id: product.id,
-                            title: product.title,
-                            unit_price: product.price,
-                            picture_url: product.picture_url,
-                            quantity: 1,
-                        },
-                    ],
+                items: [
+                    {
+                        id: product.id,
+                        title: product.title,
+                        description: product.description,
+                        picture_url: product.picture_url,
+                        unit_price: product.price,
+                        quantity: 1,
+                    },
+                ],
+                auto_return: "approved",
+                back_urls: {
+                    success: `${URL}`,
+                    failure: `${URL}`,
                 },
-                description: product.description,
-                transaction_amount: product.price,
-                payment_method_id: "visa",
+                notification_url: `${URL}/api/notify`,
             },
         });
-        console.log(response);
+
         return NextResponse.json({
-            init_point: response,
-            status: 400,
+            init_point: response.sandbox_init_point,
+            status: 200,
         });
     } catch (error) {
         console.error(error);
