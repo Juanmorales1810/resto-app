@@ -36,17 +36,27 @@ export default function TableMenu({ params }: { params: BlogParams }) {
         }
     ]
     useEffect(() => {
+        const getTask = async () => {
+            startLoading()
+            const data = await authFetch({
+                endpoint: `catalogo/`,
+                method: 'get'
+            })
+            setMenu(data.Menu);
+            finishLoading()
+        }
+
         getTask();
     }, []);
-    const getTask = async () => {
-        startLoading()
-        const data = await authFetch({
-            endpoint: `catalogo/`,
-            method: 'get'
-        })
-        setMenu(data.Menu);
-        finishLoading()
-    }
+    // const getTask = async () => {
+    //     startLoading()
+    //     const data = await authFetch({
+    //         endpoint: `catalogo/`,
+    //         method: 'get'
+    //     })
+    //     setMenu(data.Menu);
+    //     finishLoading()
+    // }
     const foundBlog = tableNum.find((mesa) => mesa.mesa === params.id);
     if (!foundBlog) {
         return (
