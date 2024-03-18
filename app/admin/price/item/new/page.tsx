@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 
 
 export default function Form() {
+    const authFetch = useAuthFetch()
     const [file, setFile] = useState<File | null>(null)
     const [datosCargados, setDatosCargados] = useState(false);
     const [getItem, setGetItem] = useState({
@@ -47,7 +48,6 @@ export default function Form() {
     //useLoading
     const { finishLoading, isLoading, startLoading } = useLoading()
     //useAuthFetch
-    const authFetch = useAuthFetch()
     const params = useParams();
     //Obtener datos
     const getTask = async () => {

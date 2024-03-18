@@ -50,13 +50,16 @@ type Imenu = {
     category: string;
 };
 
-const authFetch = useAuthFetch();
 
 export default function App() {
+    const authFetch = useAuthFetch();
     const { finishLoading, isLoading, startLoading } = useLoading()
     const [menu, setMenu] = useState([]);
     const router = useRouter();
 
+    useEffect(() => {
+        getTask();
+    }, []);
     const getTask = async () => {
         startLoading()
         const data = await authFetch({
@@ -67,9 +70,6 @@ export default function App() {
         finishLoading()
     }
 
-    useEffect(() => {
-        getTask();
-    }, []);
     const products = menu;
 
     const handleDelete = async (userId: string) => {
