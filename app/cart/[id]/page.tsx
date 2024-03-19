@@ -2,8 +2,8 @@ import { connectMongoDB } from "@/libs/mongodb";
 import Product from "@/components/productos";
 import { Image } from "@nextui-org/react";
 import Menu from "@/models/listprice";
-import { Suspense, cache } from "react";
-import Loading from "./loading";
+import { cache } from "react";
+
 
 
 interface BlogParams {
@@ -62,9 +62,7 @@ export default async function TableMenu({ params }: { params: BlogParams }) {
 
     return (
         <section className="flex flex-wrap justify-center items-center">
-            <Suspense fallback={<Loading />}>
-                <Product products={menu} />
-            </Suspense>
+            <Product products={menu} />
         </section>
     );
 }
