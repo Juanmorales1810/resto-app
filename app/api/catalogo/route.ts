@@ -14,10 +14,8 @@ cloudinary.config({
 export async function GET() {
     try {
         await connectMongoDB();
-        console.log("Conexión a la base de datos realizada correctamente");
 
         const menu = await Menu.find();
-        console.log("Resultado de la consulta:", menu);
 
         return NextResponse.json(
             {
