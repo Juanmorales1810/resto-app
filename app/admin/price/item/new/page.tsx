@@ -209,7 +209,7 @@ export default function Form() {
                             if (e.target.files) {
                                 setFile(e.target.files[0]);
                             }
-                        }} required />
+                        }} required={params.id ? false : true} />
                         <p>
                             {errors.imagen && <>{errors.imagen.message}</>}
                         </p>

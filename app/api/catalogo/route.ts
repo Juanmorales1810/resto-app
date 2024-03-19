@@ -69,6 +69,10 @@ export async function POST(NextRequest: NextRequest) {
                     resolve(result);
                 })
                 .end(buffer);
+        }).catch((error) => {
+            console.error("Error al subir la imagen:", error);
+            // Puedes manejar el error aquí o lanzar el error para manejarlo en otro lugar
+            throw error;
         });
 
         const imageUrl = resultImag.secure_url;
