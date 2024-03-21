@@ -97,7 +97,6 @@ export async function PUT(
                     status: 400,
                 }
             );
-            throw error;
         });
 
         const imageUrl = resultImag.secure_url;
@@ -135,7 +134,7 @@ export async function PUT(
     } catch (error: any) {
         console.error("Error al actualizar el menú:", error);
         return NextResponse.json(
-            { message: messages.error.default, error },
+            { message: messages.error.default },
             { status: 500 }
         );
     }

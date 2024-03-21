@@ -84,7 +84,13 @@ export default function Form() {
         if (file) {
             formData.append('image', file);
         }
-        console.log(formData);
+        console.log(formData.get('image',));
+        console.log(formData.get('name'));
+        console.log(formData.get('description'));
+        console.log(formData.get('price'));
+        console.log(formData.get('category'));
+        console.log(formData.get('status'));
+
         if (params.id) {
             await authFetch({
                 endpoint: `catalogo/${params.id}`,
@@ -93,14 +99,14 @@ export default function Form() {
                 formData: formData
             })
             finishLoading()
-            return
+        } else {
+            await authFetch({
+                endpoint: 'catalogo',
+                redirectRoute: '/admin/price',
+                formData: formData
+            })
+            finishLoading()
         }
-        await authFetch({
-            endpoint: 'catalogo',
-            redirectRoute: '/admin/price',
-            formData: formData
-        })
-        finishLoading()
     });
     if (params.id) {
 
