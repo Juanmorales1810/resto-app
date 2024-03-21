@@ -63,17 +63,6 @@ export async function PUT(
         const status = data.get("status");
         const category = data.get("category");
 
-        if (!name || !description || !image || !price || !status || !category) {
-            return NextResponse.json(
-                {
-                    message: messages.error.needProps,
-                },
-                {
-                    status: 400,
-                }
-            );
-        }
-
         //@ts-ignore
         const bytes = await image.arrayBuffer();
         const buffer = Buffer.from(bytes);
