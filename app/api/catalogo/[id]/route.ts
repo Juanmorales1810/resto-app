@@ -63,21 +63,37 @@ export async function PUT(
         const status = data.get("status");
         const category = data.get("category");
 
-        //@ts-ignore
-        const bytes = await image.arrayBuffer();
-        const buffer = Buffer.from(bytes);
+        const bytes = image ? await (image as Blob).arrayBuffer() : null;
+        const buffer = bytes ? Buffer.from(bytes) : null;
 
         const resultImag: any = await new Promise((resolve, reject) => {
             cloudinary.uploader
                 .upload_stream({}, (error, result) => {
                     if (error) {
-                        reject(error);
+                        reject(
+                            NextResponse.json(
+                                {
+                                    message: messages.error.imageNotUploaded,
+                                },
+                                {
+                                    status: 400,
+                                }
+                            )
+                        );
                     }
-                    resolve(result);
+                    resolve(
+                        NextResponse.json(
+                            {
+                                message: messages.success.imageUploaded,
+                            },
+                            {
+                                status: 400,
+                            }
+                        )
+                    );
                 })
                 .end(buffer);
         }).catch((error) => {
-            console.error("Error al subir la imagen:", error);
             return NextResponse.json(
                 {
                     message: messages.error.imageNotUploaded,

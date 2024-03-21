@@ -23,5 +23,6 @@ export const messages = {
         getMenu: "Menu obtenido correctamente",
         getItme: "Item obtenido correctamente",
         itemUpdated: "Item actualizado correctamente",
+        imageUploaded: "Imagen subida correctamente",
     },
 };
