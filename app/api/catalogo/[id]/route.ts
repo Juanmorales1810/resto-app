@@ -89,7 +89,14 @@ export async function PUT(
                 .end(buffer);
         }).catch((error) => {
             console.error("Error al subir la imagen:", error);
-            // Puedes manejar el error aquí o lanzar el error para manejarlo en otro lugar
+            return NextResponse.json(
+                {
+                    message: messages.error.imageNotUploaded,
+                },
+                {
+                    status: 400,
+                }
+            );
             throw error;
         });
 
