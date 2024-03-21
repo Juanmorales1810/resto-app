@@ -96,14 +96,24 @@ export default function Form() {
                 endpoint: `catalogo/${params.id}`,
                 method: 'put',
                 redirectRoute: '/admin/price',
-                formData: formData
+                formData: formData,
+                options: {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }
             })
             finishLoading()
         } else {
             await authFetch({
                 endpoint: 'catalogo',
                 redirectRoute: '/admin/price',
-                formData: formData
+                formData: formData,
+                options: {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }
             })
             finishLoading()
         }
