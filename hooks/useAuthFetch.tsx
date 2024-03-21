@@ -29,7 +29,10 @@ export function useAuthFetch() {
             })
             console.log(data.message);
 
-            if (redirectRoute) router.push(redirectRoute)
+            if (redirectRoute) {
+                router.push(redirectRoute)
+                router.refresh();
+            }
             return data
         } catch (error: any) {
             console.log(error.response.data.message);

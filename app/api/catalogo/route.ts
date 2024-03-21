@@ -36,15 +36,16 @@ export async function GET() {
 }
 
 export async function POST(NextRequest: NextRequest) {
-    try {
-        const data = await NextRequest.formData();
-        const image = data.get("image");
-        const name = data.get("name");
-        const description = data.get("description");
-        const price = data.get("price");
-        const status = data.get("status");
-        const category = data.get("category");
+    const data = await NextRequest.formData();
+    const image = data.get("image");
+    const name = data.get("name");
+    const description = data.get("description");
+    const price = data.get("price");
+    const status = data.get("status");
+    const category = data.get("category");
 
+    connectMongoDB();
+    try {
         if (!name || !description || !image || !price || !status || !category) {
             return NextResponse.json(
                 {

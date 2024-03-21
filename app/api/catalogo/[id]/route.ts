@@ -54,69 +54,49 @@ export async function PUT(
     NextRequest: NextRequest,
     { params }: { params: any }
 ) {
+    const data = await NextRequest.formData();
+    const image = data.get("image");
+    const name = data.get("name");
+    const description = data.get("description");
+    const price = data.get("price");
+    const status = data.get("status");
+    const category = data.get("category");
+    connectMongoDB();
     try {
-        const data = await NextRequest.formData();
-        const image = data.get("image");
-        const name = data.get("name");
-        const description = data.get("description");
-        const price = data.get("price");
-        const status = data.get("status");
-        const category = data.get("category");
+        if (!image || typeof image === "string") {
+            throw new Error("No se proporcionó ninguna imagen válida");
+        }
 
-        // const bytes = image ? await (image as Blob).arrayBuffer() : null;
-        // const buffer = bytes ? Buffer.from(bytes) : null;
+        const bytes = await (image as Blob).arrayBuffer();
+        const buffer = Buffer.from(bytes);
 
-        // const resultImag: any = await new Promise((resolve, reject) => {
-        //     cloudinary.uploader
-        //         .upload_stream({}, (error, result) => {
-        //             if (error) {
-        //                 reject(
-        //                     NextResponse.json(
-        //                         {
-        //                             message: messages.error.imageNotUploaded,
-        //                         },
-        //                         {
-        //                             status: 400,
-        //                         }
-        //                     )
-        //                 );
-        //             }
-        //             resolve(
-        //                 NextResponse.json(
-        //                     {
-        //                         message: messages.success.imageUploaded,
-        //                     },
-        //                     {
-        //                         status: 400,
-        //                     }
-        //                 )
-        //             );
-        //         })
-        //         .end(buffer);
-        // }).catch((error) => {
-        //     return NextResponse.json(
-        //         {
-        //             message: messages.error.imageNotUploaded,
-        //         },
-        //         {
-        //             status: 400,
-        //         }
-        //     );
-        // });
+        const resultImag: any = await new Promise((resolve, reject) => {
+            cloudinary.uploader
+                .upload_stream({}, (error, result) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve(result);
+                    }
+                })
+                .end(buffer);
+        });
 
-        // const imageUrl = resultImag.secure_url;
+        const imageUrl = resultImag.secure_url;
 
         const updatedItem: IMenuSchema | null = await Menu.findByIdAndUpdate(
             params.id,
             {
                 name,
                 description,
-                // image: imageUrl,
+                image: imageUrl,
                 price,
                 status,
                 category,
             },
-            { new: true }
+            {
+                new: true,
+            }
         )!;
 
         if (!updatedItem) {
