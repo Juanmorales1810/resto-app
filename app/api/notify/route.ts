@@ -22,5 +22,5 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
     // Aquí se puede guardar la donación en una base de datos
 
-    return Response.json({ success: true });
+    return NextResponse.json({ success: true });
 }
