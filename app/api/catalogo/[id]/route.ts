@@ -70,6 +70,7 @@ export async function PUT(
 
         const bytes = await (image as Blob).arrayBuffer();
         const buffer = Buffer.from(bytes);
+        console.log("Imagen subida:", buffer);
 
         const resultImag: any = await new Promise((resolve, reject) => {
             cloudinary.uploader
