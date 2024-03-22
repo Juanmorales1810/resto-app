@@ -69,7 +69,7 @@ export async function PUT(
         }
 
         const bytes = await (image as Blob).arrayBuffer();
-        const buffer = Buffer.from(bytes);
+        const buffer = await Buffer.from(bytes);
         console.log("Imagen subida:", buffer);
 
         const resultImag: any = await new Promise((resolve, reject) => {
@@ -86,9 +86,9 @@ export async function PUT(
                 })
                 .end(buffer);
         });
+        console.log("Imagen subida:", resultImag);
 
         const imageUrl = resultImag.secure_url;
-        console.log("Imagen subida:", imageUrl);
 
         const updatedItem: IMenuSchema | null = await Menu.findByIdAndUpdate(
             params.id,
