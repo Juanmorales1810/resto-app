@@ -9,6 +9,7 @@ cloudinary.config({
     cloud_name: process.env.CLOUDINARY_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET,
+    secure: true,
 });
 
 export async function GET(
@@ -74,8 +75,11 @@ export async function PUT(
             cloudinary.uploader
                 .upload_stream({}, (error, result) => {
                     if (error) {
+                        console.log("Error al subir la imagen:", error);
+
                         reject(error);
                     } else {
+                        console.log("Imagen subida");
                         resolve(result);
                     }
                 })
@@ -83,6 +87,7 @@ export async function PUT(
         });
 
         const imageUrl = resultImag.secure_url;
+        console.log("Imagen subida:", imageUrl);
 
         const updatedItem: IMenuSchema | null = await Menu.findByIdAndUpdate(
             params.id,
@@ -98,6 +103,7 @@ export async function PUT(
                 new: true,
             }
         )!;
+        console.log("Item actualizado:", updatedItem);
 
         if (!updatedItem) {
             return NextResponse.json(
