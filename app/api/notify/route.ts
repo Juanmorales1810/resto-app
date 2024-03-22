@@ -5,7 +5,7 @@ const accessToken = `${process.env.MERCADO_PAGO_ACCESS_TOKEN}`;
 const mercadopago = new MercadoPagoConfig({ accessToken });
 
 export async function POST(req: NextRequest, res: NextResponse) {
-    const body = await res
+    const body = await req
         .json()
         .then((data) => data as { data: { id: string } });
     console.log(body);
