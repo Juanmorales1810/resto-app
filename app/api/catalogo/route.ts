@@ -9,6 +9,7 @@ cloudinary.config({
     cloud_name: process.env.CLOUDINARY_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET,
+    secure: true,
 });
 
 export async function GET() {
@@ -57,24 +58,29 @@ export async function POST(NextRequest: NextRequest) {
             );
         }
 
-        //@ts-ignore
-        const bytes = await image.arrayBuffer();
-        const buffer = Buffer.from(bytes);
+        if (!image || typeof image === "string") {
+            throw new Error("No se proporcionó ninguna imagen válida");
+        }
+
+        const bytes = await (image as Blob).arrayBuffer();
+        const buffer = await Buffer.from(bytes);
+        console.log("Imagen subida:", buffer);
 
         const resultImag: any = await new Promise((resolve, reject) => {
             cloudinary.uploader
                 .upload_stream({}, (error, result) => {
                     if (error) {
+                        console.log("Error al subir la imagen:", error);
+
                         reject(error);
+                    } else {
+                        console.log("Imagen subida");
+                        resolve(result);
                     }
-                    resolve(result);
                 })
                 .end(buffer);
-        }).catch((error) => {
-            console.error("Error al subir la imagen:", error);
-            // Puedes manejar el error aquí o lanzar el error para manejarlo en otro lugar
-            throw error;
         });
+        console.log("Imagen subida:", resultImag);
 
         const imageUrl = resultImag.secure_url;
         const body = JSON.stringify({
