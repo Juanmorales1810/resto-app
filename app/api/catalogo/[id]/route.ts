@@ -72,17 +72,10 @@ export async function PUT(
         const buffer = Buffer.from(bytes);
         console.log("Imagen subida:", buffer);
 
-        const resultImag: any = await new Promise((resolve, reject) => {
+        const resultImag: any = await new Promise((resolve) => {
             cloudinary.uploader
-                .upload_stream({}, (error, result) => {
-                    if (error) {
-                        console.log("Error al subir la imagen:", error);
-
-                        reject(error);
-                    } else {
-                        console.log("Imagen subida");
-                        resolve(result);
-                    }
+                .upload_stream((error, uploadResult) => {
+                    return resolve(uploadResult);
                 })
                 .end(buffer);
         });
