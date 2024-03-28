@@ -61,7 +61,7 @@ export default async function TableMenu({ params }: { params: BlogParams }) {
 
 
     return (
-        <section className="flex flex-wrap justify-center items-center">
+        <section className="flex flex-wrap justify-center items-center w-full max-w-5xl">
             <Product products={menu} />
         </section>
     );
