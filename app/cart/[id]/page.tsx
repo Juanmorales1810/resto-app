@@ -6,7 +6,7 @@ import { cache } from "react";
 
 
 
-interface BlogParams {
+interface Params {
     id: string;
 }
 const getItems = cache(async function loadMenu() {
@@ -18,7 +18,7 @@ const getItems = cache(async function loadMenu() {
         return obj;
     }); // Usa .toObject() para convertir cada producto a un objeto JavaScript simple
 })
-export default async function TableMenu({ params }: { params: BlogParams }) {
+export default async function TableMenu({ params }: { params: Params }) {
     const menu = await getItems();
     const tableNum = [
         {
@@ -62,7 +62,7 @@ export default async function TableMenu({ params }: { params: BlogParams }) {
 
     return (
         <section className="flex flex-wrap justify-center items-center w-full max-w-5xl">
-            <Product products={menu} />
+            <Product products={menu} table={params.id} />
         </section>
     );
 }
