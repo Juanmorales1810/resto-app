@@ -9,7 +9,7 @@ interface CardItemProps {
     description: string;
     price: number;
     image: string;
-    table: string;
+    table?: string;
 }
 
 export default function CardItem(props: CardItemProps) {
