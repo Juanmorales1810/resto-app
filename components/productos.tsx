@@ -7,6 +7,7 @@ import { SearchIcon } from "./icons";
 
 interface ProductProps {
     products: ProductItem[];
+    table: string;
 }
 interface ProductItem {
     _id: string;
@@ -18,7 +19,7 @@ interface ProductItem {
 
 }
 export default function Product(props: ProductProps) {
-    const { products } = props;
+    const { products, table } = props;
     const [filterValue, setFilterValue] = useState("");
     const [selected, setSelected] = useState("all");
     const hasSearchFilter = Boolean(filterValue);
@@ -76,7 +77,7 @@ export default function Product(props: ProductProps) {
                 <Tab key="all" title="Todo">
                     <div className="flex flex-wrap justify-center items-center gap-4">
                         {filteredItems.map((product: ProductItem) => (
-                            <CardItem key={product._id} title={product.name} description={product.description} image={product.image} price={product.price} />
+                            <CardItem key={product._id} title={product.name} description={product.description} image={product.image} price={product.price} table={table} id={product._id} />
                         ))}
                     </div>
                 </Tab>
@@ -84,7 +85,7 @@ export default function Product(props: ProductProps) {
                     <div className="flex flex-wrap justify-center items-center gap-4">
                         {filteredItems.map((product: ProductItem) => (
                             product.category === "comida" &&
-                            <CardItem key={product._id} title={product.name} description={product.description} image={product.image} price={product.price} />
+                            <CardItem key={product._id} title={product.name} description={product.description} image={product.image} price={product.price} table={table} id={product._id} />
                         ))}
                     </div>
                 </Tab>
@@ -92,7 +93,7 @@ export default function Product(props: ProductProps) {
                     <div className="flex flex-wrap justify-center items-center gap-4">
                         {filteredItems.map((product: ProductItem) => (
                             product.category === "bebida" &&
-                            <CardItem key={product._id} title={product.name} description={product.description} image={product.image} price={product.price} />
+                            <CardItem key={product._id} title={product.name} description={product.description} image={product.image} price={product.price} table={table} id={product._id} />
                         ))}
                     </div>
                 </Tab>
