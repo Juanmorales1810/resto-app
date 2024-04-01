@@ -17,16 +17,16 @@ interface ItemProps {
 }
 
 export default function Items(props: ItemProps) {
-    const [tableNum, setTableNum] = useState(1)
+    const [multiplier, setMultiplier] = useState(1)
     const { title, description, price, image, id, table } = props;
     const router = useRouter()
     const { finishLoading, isLoading, startLoading } = useLoading()
     const product = {
         id: id,
-        title: title,
-        price: price,
+        title: multiplier > 1 ? `${title} x${multiplier}` : title,
+        price: price * multiplier,
         picture_url: image,
-        description: description
+        description: table
     };
     const handleClick = async () => {
         startLoading()
@@ -51,16 +51,16 @@ export default function Items(props: ItemProps) {
                     <h3 className="text-xl font-medium">${price} <small>c/u</small></h3>
                     <h3 className="text-xl font-medium">Cantidad</h3>
                     <div className="flex justify-center items-center gap-2">
-                        <Button isIconOnly color={tableNum === 1 ? "default" : "warning"} aria-label="Añadir" onClick={() => tableNum > 1 && setTableNum(tableNum - 1)}>
+                        <Button isIconOnly color={multiplier === 1 ? "default" : "warning"} aria-label="Añadir" onClick={() => multiplier > 1 && setMultiplier(multiplier - 1)}>
                             <SubtractIcon />
                         </Button>
-                        <h2 className="text-xl font-medium ">{tableNum}</h2>
-                        <Button isIconOnly color="warning" aria-label="Restar" onClick={() => setTableNum(tableNum + 1)}>
+                        <h2 className="text-xl font-medium ">{multiplier}</h2>
+                        <Button isIconOnly color="warning" aria-label="Restar" onClick={() => setMultiplier(multiplier + 1)}>
                             <AddIcon />
                         </Button>
                     </div>
                     <div className="flex justify-center items-center gap-4">
-                        <h3 className="text-xl font-medium">Total: ${price * tableNum}</h3>
+                        <h3 className="text-xl font-medium">Total: ${price * multiplier}</h3>
                         <Button color="warning" variant="shadow" className="font-bold" isLoading={isLoading} onClick={handleClick}>Comprar</Button>
                     </div>
                 </div>
