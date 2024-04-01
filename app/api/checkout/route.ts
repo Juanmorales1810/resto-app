@@ -32,8 +32,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
                 ],
                 auto_return: "approved",
                 back_urls: {
-                    success: `${URL}`,
-                    failure: `${URL}`,
+                    success: `${URL}/cart/${product.description}`,
+                    failure: `${URL}/cart/${product.description}`,
                 },
                 notification_url: `${URL}/api/notify`,
             },
