@@ -61,6 +61,7 @@ export default function TableItems(props: ProductProps) {
                 endpoint: `catalogo/${userId}`,
                 method: 'delete'
             })
+            router.push("/admin/price");
             router.refresh();
         }
     }
