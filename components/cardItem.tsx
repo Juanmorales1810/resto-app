@@ -21,7 +21,7 @@ export default function CardItem(props: CardItemProps) {
         title: title,
         price: price,
         picture_url: image,
-        description: description
+        description: table
     };
     const handleClick = async () => {
         startLoading()
