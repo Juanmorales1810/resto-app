@@ -44,7 +44,7 @@ const CardSpotlight = () => {
             onBlur={handleBlur}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            className='relative flex h-auto w-auto max-w-7xl items-center justify-center overflow-hidden rounded-xl border border-gray-800 bg-gradient-to-r from-black to-gray-950 shadow-2xl'
+            className='relative flex flex-col h-auto w-auto max-w-7xl items-center justify-center overflow-hidden rounded-xl border border-gray-800 bg-gradient-to-r from-black to-gray-950 shadow-2xl md:flex-row'
         >
             <div
                 className='pointer-events-none absolute -inset-px opacity-0 transition duration-300'
@@ -53,10 +53,10 @@ const CardSpotlight = () => {
                     background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(255,255,0,.1), transparent 40%)`,
                 }}
             />
-            <div className='w-1/2 h-full'>
+            <div className='md:w-1/2 h-full'>
                 <Image src='/local.jpg' alt='Lo del pibe local' isBlurred />
             </div>
-            <div className="flex flex-col justify-center items-center w-1/2 h-[360px] px-8 py-16 bg-[url('/map.webp')] bg-cover bg-center">
+            <div className="flex flex-col justify-center items-center md:w-1/2 h-[360px] px-8 py-16 bg-[url('/map.webp')] bg-cover bg-center">
                 <h1 className='text-3xl font-bold text-white'>Visitanos en nuestro local!</h1>
                 <p className='text-lg text-gray-300'>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
