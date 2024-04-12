@@ -40,7 +40,7 @@ export default function Items(props: ItemProps) {
         finishLoading()
     };
     return (
-        <div>
+        <div className="backdrop-blur-sm bg-black/5 p-4 rounded-md ring-1 ring-zinc-900">
             <h1 className="text-5xl font-bold uppercase text-warning-400 mb-6">{title}</h1>
             <div className="flex flex-col w-full gap-8 max-w-5xl md:flex-wrap">
                 <div className="flex justify-center items-center">

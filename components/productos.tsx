@@ -60,7 +60,7 @@ export default function Product(props: ProductProps) {
                     input: ["text-white text-lg font-semibold"],
                     inputWrapper: [
                         "shadow-xl",
-                        "bg-zinc-950",
+                        "bg-zinc-800",
                         "!cursor-text",
                     ],
                 }}
@@ -72,7 +72,7 @@ export default function Product(props: ProductProps) {
                 selectedKey={selected}
                 //@ts-ignore
                 onSelectionChange={setSelected}
-                className="font-bold"
+                className="font-bold backdrop-blur-sm bg-black/5"
             >
                 <Tab key="all" title="Todo">
                     <div className="flex flex-wrap justify-center items-center gap-4">
