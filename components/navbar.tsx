@@ -21,10 +21,10 @@ export const Nav = () => {
     return (
         <Navbar onMenuOpenChange={setIsMenuOpen}>
             <NavbarContent>
-                <NavbarMenuToggle
+                {/* <NavbarMenuToggle
                     aria-label={isMenuOpen ? "Close menu" : "Open menu"}
                     className="sm:hidden"
-                />
+                /> */}
                 <NavbarBrand>
                     <Link href="/" color="foreground" size="lg">
                         <Image className="dark:invert" src="/logoresto2.webp" alt="Logo" width="150" height="300" priority />
@@ -33,20 +33,20 @@ export const Nav = () => {
             </NavbarContent>
 
             <NavbarContent className="hidden sm:flex gap-4" justify="center">
-                {siteConfig.navItems.map((link, index) => (
+                {/* {siteConfig.navItems.map((link, index) => (
                     <NavbarItem key={`${link}-${index}`}>
                         <Link color="foreground" href={link.href}>
                             {link.label}
                         </Link>
                     </NavbarItem>
-                ))}
+                ))} */}
             </NavbarContent>
             <NavbarContent justify="end">
                 <NavbarItem className="flex">
                     <ThemeSwitch />
                 </NavbarItem>
             </NavbarContent>
-            <NavbarMenu>
+            {/* <NavbarMenu>
                 {siteConfig.navItems.map((item, index) => (
                     <NavbarMenuItem key={`${item}-${index}`}>
                         <Link
@@ -59,7 +59,7 @@ export const Nav = () => {
                         </Link>
                     </NavbarMenuItem>
                 ))}
-            </NavbarMenu>
+            </NavbarMenu> */}
         </Navbar>
     );
 };
