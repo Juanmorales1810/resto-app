@@ -36,7 +36,7 @@ export default function AboutLayout({
     };
     return (
         <div className="relative flex flex-row w-full h-full min-h-[35rem]">
-            <Sidebar color="dark"
+            <Sidebar color="zinc"
                 onToggle={(state: SidebarState) => {
                     setExpanded(state.expanded);
                     setMobile(state.mobile);
