@@ -32,6 +32,10 @@ export default async function TableMenu({ params }: { params: Params }) {
         {
             mesa: "3",
             qr: "https://www.qr-code-generator.com/",
+        },
+        {
+            mesa: "caja",
+            qr: "https://www.qr-code-generator.com/",
         }
     ]
     const foundBlog = tableNum.find((mesa) => mesa.mesa === params.id);
