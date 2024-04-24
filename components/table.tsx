@@ -153,7 +153,7 @@ export default function TableItems(props: ProductProps) {
                     <div className="relative flex justify-start items-center gap-2">
                         <div className="relative flex items-center gap-2">
                             <Tooltip content="Detalles">
-                                <Link href={`/admin/price/item/${user._id}`} className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                                <Link href={`/cart/caja/${user._id}`} className="text-lg text-default-400 cursor-pointer active:opacity-50">
                                     <EyeIcon />
                                 </Link>
                             </Tooltip>
